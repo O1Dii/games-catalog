@@ -34,6 +34,16 @@
         margin: 0;
         margin-left: -2px !important;
     }
+    #games-list{
+        margin-top: 5%;
+        height: 60%;
+    }
+    .light{
+        background-color: lightgray;
+    }
+    .dark{
+        background-color: gray;
+    }
     </style>
 {% endblock %}
 
@@ -44,7 +54,25 @@
         </div>
         <div class="col-8">
             <input type="text" placeholder="Search...">
-
+            <div class="container-fluid d-flex flex-column" id="games-list">
+                <div class="row bg-light flex-fill d-flex">
+                    <div class="col-4 light">
+                        <h1>Pacman
+                        </h1>
+                    </div>
+                    <div class="col-4 dark"></div>
+                    <div class="col-4 light"></div>
+                </div>
+                <div class="row bg-light flex-fill d-flex">
+                    <div class="col-4 dark">
+                        <h1>Pacman
+                        </h1>
+                    </div>
+                    <div class="col-4 light"></div>
+                    <div class="col-4 dark"></div>
+                </div>
+                <div class="row"></div>
+            </div>
         </div>
     </div>
 
