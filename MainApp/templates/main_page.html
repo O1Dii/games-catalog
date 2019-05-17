@@ -13,6 +13,10 @@
         text-align: center;
         margin-top: 10px;
         background-image: url("media/searchicon.svg");
+        background-position-y: 5px;
+        background-position-x: right;
+        background-size: 20px;
+        background-repeat: no-repeat;
         height: 30px;
     }
     .floating-button{
@@ -35,14 +39,26 @@
         margin-left: -2px !important;
     }
     #games-list{
-        margin-top: 5%;
+        margin-top: 1%;
         height: 60%;
     }
-    .light{
-        background-color: lightgray;
+    .pages-container{
+        margin-top: 10px;
+        height: 50px;
+        width: 40%;
     }
-    .dark{
-        background-color: gray;
+    .pages-button{
+        background-color: red;
+        color: white;
+        border-color: red;
+        border-style: solid;
+    }
+    .each-page-container{
+        margin: 5px;
+    }
+    .my-row{
+        height: 40%;
+        margin-top: 20px;
     }
     </style>
 {% endblock %}
@@ -54,24 +70,24 @@
         </div>
         <div class="col-8">
             <input type="text" placeholder="Search...">
-            <div class="container-fluid d-flex flex-column" id="games-list">
-                <div class="row bg-light flex-fill d-flex">
-                    <div class="col-4 light">
-                        <h1>Pacman
-                        </h1>
-                    </div>
-                    <div class="col-4 dark"></div>
-                    <div class="col-4 light"></div>
+            <div class="container-fluid d-flex flex-column flex-row" id="games-list">
+                <div class="my-row row bg-light flex-fill d-flex">
+                    {% for i in '123' %}
+                        {% include 'game_template.html' %}
+                    {% endfor %}
                 </div>
-                <div class="row bg-light flex-fill d-flex">
-                    <div class="col-4 dark">
-                        <h1>Pacman
-                        </h1>
-                    </div>
-                    <div class="col-4 light"></div>
-                    <div class="col-4 dark"></div>
+                <div class="my-row row bg-light flex-fill d-flex" >
+                    {% for i in '1' %}
+                        {% include 'game_template.html' %}
+                    {% endfor %}
                 </div>
-                <div class="row"></div>
+                <div class="row d-flex justify-content-center">
+                    <div class="row pages-container d-flex flex-wrap justify-content-center">
+                        <div class="each-page-container align-self-start"><button type="button" class="pages-button">1</button></div>
+                        <div class="each-page-container align-self-end"><button type="button" class="pages-button">2</button></div>
+                        <div class="each-page-container align-self-end"><button type="button" class="pages-button">3</button></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

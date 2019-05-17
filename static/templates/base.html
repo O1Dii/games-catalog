@@ -3,31 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" type="text/css" href="{%  %}" />
-    <link rel="stylesheet" type="text/css" href="/templates/css/styling.css" />
+    {% load static %}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <style>
-        .nav{
-            background-color: red;
-            padding: .2%;
-        }
-        .nav_item{
-            color: white;
-        }
-        ul{
-            list-style-type: none;
-            padding: 0px;
-            margin: 0px;
-            float:left;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styling.css' %}" />
+    <link rel="stylesheet" type="text/css" href="/static/css/styling.css" />
+<style>
+    html, body{
+        height: 100%;
+    }
+    .nav{
+        background-color: red;
+        padding: .2%;
+    }
+    .nav_item{
+        color: white;
+    }
+    ul{
+        list-style-type: none;
+        padding: 0px;
+        margin: 0px;
+        float:left;
+    }
+    li{
+        float: left;
+    }
+    .fa-cloud{
+        width: 50px !important;
+        height: 50px !important;
+        margin-right: 10px;
+        margin-left: 10px;
+    }
+    i{
+        color: white;
+    }
+</style>
+{% block head %}
+{% endblock %}
 </head>
 <body>
 <nav class="nav">
     <ul>
         <li>
-            <i class="fas fa-cloud"></i>
+            <i class="fa fa-cloud fa-3x"></i>
         </li>
         <li>
             <h1 class="nav_item">GameMuster</h1>

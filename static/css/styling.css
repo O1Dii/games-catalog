@@ -1,3 +1,13 @@
 .nav{
     background-color: red;
+    padding: .2%;
+}
+.nav_item{
+    color: white;
+}
+ul{
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    float:left;
 }

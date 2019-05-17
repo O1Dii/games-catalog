@@ -1,3 +1,9 @@
 from django.db import models
 
-# Create your models here.
+
+class GameImage(models.Model):
+    image = models.ImageField(upload_to='')
+
+    class Meta:
+        verbose_name = 'Картинка'
+        verbose_name_plural = 'Картинки'
