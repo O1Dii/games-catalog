@@ -1,10 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-</body>
-</html>
+{% block title %}
+    Main page
+{% endblock %}
+
+{% block head %}
+    <style>
+        input{
+        width: 100%;
+        border: none;
+        border-bottom: 2px solid black;
+        text-align: center;
+        margin-top: 10px;
+        background-image: url("media/searchicon.svg");
+        height: 30px;
+    }
+    .floating-button{
+        border-radius: 100%;
+        width: 30px;
+        height: 30px;
+        background-color: red;
+        margin-left: 10px;
+        margin-top: 10px;
+        color: white;
+        border-color: red;
+        border-style: solid;
+        font-size: 10px;
+        padding: 0;
+    }
+    #floating-btn-icon{
+        width: 30px !important;
+        height: 30px !important;
+        margin: 0;
+        margin-left: -2px !important;
+    }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="h-100 row">
+        <div class="col-2">
+            <button type="button" class="floating-button"><i id="floating-btn-icon" class="fa fa-cloud"></i></button>
+        </div>
+        <div class="col-8">
+            <input type="text" placeholder="Search...">
+
+        </div>
+    </div>
+
+{% endblock %}
