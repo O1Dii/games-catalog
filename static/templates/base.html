@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{%  %}" />
+    <link rel="stylesheet" type="text/css" href="/templates/css/styling.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        .nav{
+            background-color: red;
+            padding: .2%;
+        }
+        .nav_item{
+            color: white;
+        }
+        ul{
+            list-style-type: none;
+            padding: 0px;
+            margin: 0px;
+            float:left;
+        }
+    </style>
+</head>
+<body>
+<nav class="nav">
+    <ul>
+        <li>
+            <i class="fas fa-cloud"></i>
+        </li>
+        <li>
+            <h1 class="nav_item">GameMuster</h1>
+        </li>
+    </ul>
+</nav>
+{% block body %}
+{% endblock %}
+</body>
+</html>
