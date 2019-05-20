@@ -8,24 +8,31 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main_page.css' %}"/>
     <script src="{% static 'scripts/side_menu.js' %}"></script>
-    <style>
-
-    </style>
+    <link href="nouislider.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
+    <script src="nouislider.min.js"></script>
     <div class="h-100 row">
         <div class="col-2">
-            <button type="button" class="floating-button" onclick="openNav()"><i id="floating-btn-icon" class="fa fa-cloud"></i></button>
+            <div id="filter-btn-div">
+                <button type="button" class="floating-button" onclick="openCloseNav()"></button>
+                <h1 id="filters-title">Filters</h1>
+            </div>
             <div id="mySidenav" class="sidenav">
-              <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-              <a href="#">About</a>
-              <a href="#">Services</a>
-              <a href="#">Clients</a>
-              <a href="#">Contact</a>
+                <div class="navbar-div">
+                    <h5>Platforms</h5>
+                    <input id="platforms-search" class="navbar-search" type="text">
+                </div>
+                <div class="navbar-div">
+                    <h5>Genres</h5>
+                    <span><input id="genres-search" class="navbar-search" type="text"></span>
+                </div>
+                <h5>User rating</h5>
+                <div id="slider"></div>
             </div>
         </div>
-        <div class="col-8">
+        <div id="main" class="col-8">
             <input type="text" placeholder="Search...">
             <div class="container-fluid d-flex flex-column flex-row" id="games-list">
                 <div class="my-row row bg-light flex-fill d-flex">

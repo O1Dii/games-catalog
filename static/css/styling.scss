@@ -1,17 +1,27 @@
+$primary-color: red;
+$secondary-color: white;
+$black-color: black;
+
 html, body{
     height: 100%;
+    overflow: hidden;
 }
 .nav{
-    background-color: red;
-    padding: .2%;
+    background-color: $primary-color;
+    padding: .2% .2% 0;
+    -webkit-box-shadow: 0 3px 5px 0 $black-color;
+    -moz-box-shadow: 0 3px 5px 0 $black-color;
+    box-shadow: 0 3px 5px 0 $black-color;
+    position: relative;
+    z-index: 5;
 }
 .nav_item{
-    color: white;
+    color: $secondary-color;
 }
 ul{
     list-style-type: none;
-    padding: 0px;
-    margin: 0px;
+    padding: 0 !important;
+    margin: 0 !important;
     float:left;
 }
 li{
@@ -24,5 +34,5 @@ li{
     margin-left: 10px;
 }
 i{
-    color: white;
+    color: $secondary-color;
 }
