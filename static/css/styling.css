@@ -1,13 +1,27 @@
-.nav{
-    background-color: red;
-    padding: .2%;
-}
-.nav_item{
-    color: white;
-}
-ul{
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-    float:left;
-}
+html, body {
+  height: 100%; }
+
+.nav {
+  background-color: red;
+  padding: .2%; }
+
+.nav_item {
+  color: white; }
+
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  float: left; }
+
+li {
+  float: left; }
+
+.fa-cloud {
+  width: 50px !important;
+  height: 50px !important;
+  margin-right: 10px;
+  margin-left: 10px; }
+
+i {
+  color: white; }
