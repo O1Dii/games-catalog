@@ -1,4 +1,4 @@
-"""ITechArt_project URL Configuration
+"""itechart_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -16,11 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include
-from ITechArt_project import settings
+from itechart_project import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('MainApp.urls')),
+    path('', include('main_app.urls')),
 ]
 
 if settings.DEBUG:
