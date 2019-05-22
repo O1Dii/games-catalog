@@ -1,0 +1,166 @@
+input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid black;
+  text-align: center;
+  margin-top: 10px;
+  background-image: url("/static/media/searchicon.svg");
+  background-position-y: 5px;
+  background-position-x: right;
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  height: 30px; }
+
+h5 {
+  margin-top: auto;
+  color: white; }
+
+.navbar-div {
+  display: flex;
+  flex-direction: column; }
+
+.navbar-search {
+  background-image: none;
+  margin-top: auto;
+  border-bottom: 2px solid white;
+  color: white; }
+
+.floating-button {
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  background-color: red;
+  margin-left: 10px;
+  margin-top: 10px;
+  color: transparent;
+  border-color: red;
+  border-style: solid;
+  font-size: 10px;
+  padding: 0;
+  z-index: 2;
+  position: absolute;
+  background-image: url("/static/media/arrow_down.svg");
+  background-size: 20px;
+  background-position-x: 3px;
+  background-position-y: 5px;
+  background-repeat: no-repeat; }
+
+#floating-btn-icon {
+  width: 30px !important;
+  height: 30px !important;
+  margin: 0;
+  margin-left: -2px !important; }
+
+#filters-title {
+  margin-left: 50px;
+  color: white;
+  display: none; }
+
+#filter-btn-div {
+  width: 100%;
+  position: absolute;
+  z-index: 2;
+  border-bottom: 2px solid white; }
+
+#games-list {
+  margin-top: 1%;
+  height: 60%; }
+
+.pages-container {
+  margin-top: 10px;
+  height: 50px;
+  width: 40%; }
+
+.pages-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
+.each-page-container {
+  margin: 5px; }
+
+.my-row {
+  height: 40%;
+  margin-top: 20px; }
+
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  left: 0;
+  background-color: red;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.3s; }
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s; }
+
+#main {
+  transition: margin-left .3s;
+  padding: 20px; }
+
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px; }
+  .sidenav a {
+    font-size: 18px; } }
+
+#apply_filters_btn {
+  margin-top: 30px;
+  margin-left: 30%;
+  margin-right: 30%;
+  width: 40%;
+  height: 50px;
+  font-size: xx-large;
+  color: red;
+  background-color: white;
+  border-color: red;
+  border-style: solid; }
+
+section.range-slider {
+  color: white;
+  outline: 0;
+  position: relative;
+  width: 100%;
+  height: 35px;
+  text-align: center; }
+
+section.range-slider input:active, section.range-slider input:focus {
+  outline: 0; }
+
+section.range-slider input {
+  color: white;
+  pointer-events: none;
+  position: absolute;
+  overflow: hidden;
+  left: 0;
+  top: 15px;
+  width: 100%;
+  outline: 0;
+  height: 18px;
+  margin: 0;
+  padding: 0; }
+
+section.range-slider input::-webkit-slider-thumb {
+  color: white;
+  pointer-events: all;
+  position: relative;
+  z-index: 1;
+  outline: 0; }
+
+section.range-slider input::-moz-range-thumb {
+  color: white;
+  outline: 0;
+  pointer-events: all;
+  position: relative;
+  z-index: 10;
+  -moz-appearance: none;
+  width: 9px; }

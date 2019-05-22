@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styling.css' %}" />
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+{% block head %}
+{% endblock %}
+</head>
+<body>
+<nav class="nav">
+    <ul>
+        <li>
+            <img src="{% static 'media/logo.png' %}" height="50" width="65">
+        </li>
+        <li>
+            <h1 class="nav_item">GameMuster</h1>
+        </li>
+    </ul>
+</nav>
+{% block body %}
+{% endblock %}
+</body>
+</html>
