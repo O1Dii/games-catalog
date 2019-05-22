@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/detail_page.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id="content">
+        <div class="row">
+            <div class="col-9">
+                <div class="container-fluid">
+                    <div id="title-container" class="row">
+                        <div class="col-3"><h1>PACMAN</h1></div>
+                        <div class="col-2 text-with-background"><h1>MUST</h1></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+                            <h5>arcade oldschool</h5>
+                            <h3>Description</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, animi architecto assumenda aut beatae, commodi consectetur cupiditate eos eum fugiat harum id ipsam iusto maxime nobis nostrum odit perspiciatis porro quos recusandae sapiente suscipit tenetur unde, voluptate voluptatem! Aperiam beatae deleniti dolorem iusto laudantium necessitatibus non numquam officiis perferendis qui quia quidem quod rem sunt suscipit, tempore veniam vitae voluptas? Consectetur delectus expedita id necessitatibus.</p>
+                            <h3>Release Date</h3>
+                            <p>Nov 1992</p>
+                            <h3>Screenshots</h3>
+                            <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
+                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                <h2>#Pacman Tweets</h2>
+                <div class="d-flex flex-wrap flex-column">
+                    {% include 'tweet_template.html' %}
+                    {% include 'tweet_template.html' %}
+                    {% include 'tweet_template.html' %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
