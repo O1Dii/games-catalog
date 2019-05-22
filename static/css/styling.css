@@ -1,6 +1,5 @@
 html, body {
-  height: 100%;
-  overflow: hidden; }
+  height: 100%; }
 
 .nav {
   background-color: red;
@@ -22,12 +21,3 @@ ul {
 
 li {
   float: left; }
-
-.fa-cloud {
-  width: 50px !important;
-  height: 50px !important;
-  margin-right: 10px;
-  margin-left: 10px; }
-
-i {
-  color: white; }

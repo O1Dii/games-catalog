@@ -8,11 +8,9 @@
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/main_page.css' %}"/>
     <script src="{% static 'scripts/side_menu.js' %}"></script>
-    <link href="nouislider.min.css" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
-    <script src="nouislider.min.js"></script>
     <div class="h-100 row">
         <div class="col-2">
             <div id="filter-btn-div">
@@ -29,18 +27,23 @@
                     <span><input id="genres-search" class="navbar-search" type="text"></span>
                 </div>
                 <h5>User rating</h5>
-                <div id="slider"></div>
+                <section class="range-slider">
+                  <span class="rangeValues"></span>
+                  <input value="0" min="0" max="10" step="1" type="range">
+                  <input value="10" min="0" max="10" step="1" type="range">
+                </section>
+                <button id="apply_filters_btn">Apply</button>
             </div>
         </div>
         <div id="main" class="col-8">
             <input type="text" placeholder="Search...">
             <div class="container-fluid d-flex flex-column flex-row" id="games-list">
-                <div class="my-row row bg-light flex-fill d-flex">
+                <div class="my-row row flex-fill d-flex">
                     {% for i in '123' %}
                         {% include 'game_template.html' %}
                     {% endfor %}
                 </div>
-                <div class="my-row row bg-light flex-fill d-flex" >
+                <div class="my-row row flex-fill d-flex" >
                     {% for i in '1' %}
                         {% include 'game_template.html' %}
                     {% endfor %}

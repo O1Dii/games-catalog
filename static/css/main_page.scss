@@ -63,6 +63,7 @@ h5 {
 #filters-title{
     margin-left: 50px;
     color: $secondary-color;
+    display: none;
 }
 #filter-btn-div{
     width: 100%;
@@ -122,4 +123,66 @@ h5 {
 @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+}
+
+#apply_filters_btn{
+    margin-top: 30px;
+    margin-left: 30%;
+    margin-right: 30%;
+    width: 40%;
+    height: 50px;
+    font-size: xx-large;
+    color: $primary-color;
+    background-color: $secondary-color;
+    border-color: $primary-color;
+    border-style: solid;
+}
+
+
+
+
+
+section.range-slider {
+    color: $secondary-color;
+    outline: 0;
+    position: relative;
+    width: 100%;
+    height: 35px;
+    text-align: center;
+}
+
+section.range-slider input:active, section.range-slider input:focus{
+    outline: 0;
+}
+
+section.range-slider input {
+    color: $secondary-color;
+    pointer-events: none;
+    position: absolute;
+    overflow: hidden;
+    left: 0;
+    top: 15px;
+    width: 100%;
+    outline: 0;
+    height: 18px;
+    margin: 0;
+    padding: 0;
+}
+
+section.range-slider input::-webkit-slider-thumb {
+    color: $secondary-color;
+    pointer-events: all;
+    position: relative;
+    z-index: 1;
+    outline: 0;
+}
+
+section.range-slider input::-moz-range-thumb {
+    color: $secondary-color;
+    outline: 0;
+    pointer-events: all;
+    position: relative;
+    z-index: 10;
+    -moz-appearance: none;
+    width: 9px;
 }

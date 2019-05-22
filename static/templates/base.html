@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/styling.css' %}" />
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 {% block head %}
 {% endblock %}
@@ -14,7 +13,7 @@
 <nav class="nav">
     <ul>
         <li>
-            <i class="fa fa-cloud fa-3x"></i>
+            <img src="{% static 'media/logo.png' %}" height="50" width="65">
         </li>
         <li>
             <h1 class="nav_item">GameMuster</h1>

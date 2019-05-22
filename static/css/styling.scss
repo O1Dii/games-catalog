@@ -4,7 +4,6 @@ $black-color: black;
 
 html, body{
     height: 100%;
-    overflow: hidden;
 }
 .nav{
     background-color: $primary-color;
@@ -26,13 +25,4 @@ ul{
 }
 li{
     float: left;
-}
-.fa-cloud{
-    width: 50px !important;
-    height: 50px !important;
-    margin-right: 10px;
-    margin-left: 10px;
-}
-i{
-    color: $secondary-color;
 }
