@@ -1,49 +1,75 @@
 import requests
+from math import ceil
+from itechart_project.settings import IGDB_API_KEY
 
 
 class IGDB:
-    api_key = 'ca03e6492746de9c40fb685c0b1fe80b'
-    api_url = 'https://api-v3.igdb.com/'
-    headers = {
-        'user-key': api_key,
+    __api_key = IGDB_API_KEY
+    __api_url = 'https://api-v3.igdb.com/'
+    __headers = {
+        'user-key': __api_key,
         'Accept': 'application/json'
     }
 
-    def api_get(self, additional_string: ''):
-        result = self.api_url + additional_string
-        print(result)
-        data = requests.get(result, headers=self.headers).json()
+    def __init__(self):
+        self.__last_headers_x_count = 1
+
+    def __api_get(self, additional_string: str = ''):
+        data = requests.get(self.__api_url + additional_string, headers=self.__headers)
+        x_count = int(data.headers.get('X-Count'))
+        if x_count > 1:
+            self.__last_headers_x_count = x_count
+        return data.json()
+
+    def api_get_game(self, game_id):
+        data = self.__api_get(f'games/{game_id}?fields=rating,version_title,aggregated_rating,'
+                              f' screenshots,summary,cover,platforms,genres')
         print(data)
-        for each in data:
-            screens = each.get('screenshots')
-            cover = each.get('cover')
-            if screens is not None:
-                for i in screens:
-                    self.api_get_image(i)
-            if cover is not None:
-                self.api_get_image(cover, True)
+        return data
 
-    def api_get_game(self, first_argument: str = '', search: str = None, fields: str = None, filters: str = None):
-        additional = 'games/' + first_argument + '?'
+    def __generate_filters(self, search: str = None, genres: str = None,
+                           platforms: str = None, user_ratings: tuple = None) -> str:
+        result = []
         if search is not None:
-            additional += ('search=' + search.replace(' ', '%20') + '&')
-        if fields is not None:
-            additional += ('fields=' + fields.replace(' ', '') + '&')
-        if filters is not None:
-            additional += ('filters=' + filters)
-        self.api_get(additional)
+            result.append(f'&search={search.replace(" ", "%20")}&')
+        if any((genres, platforms, user_ratings)):
+            result.append('filter')
+        if genres is not None:
+            result.append(f'[genres][eq]={genres},')
+        if platforms is not None:
+            result.append(f'[platforms][eq]={platforms},')
+        if user_ratings is not None:
+            try:
+                result.append(f'[rating][gt]={user_ratings[0]},[rating][lt]={user_ratings[1]},')
+            except IndexError as e:
+                print(e)
+        if len(result) != 0:
+            return ''.join(result)[:-1]
+        else:
+            return ''
 
-    def api_get_image(self, id, cover=False):
-        result = self.api_url + ('covers/' if cover else 'screenshots/')
-        data = requests.get(result + str(id) + '?fields=url', headers=self.headers).json()
-        print('https:' + data[0].get('url').replace('t_thumb', 't_logo_med' if cover else 't_screenshot_med'))
+    def api_get_last_pages_amount(self) -> int:
+        """returns total amount of pages for last game list"""
+        return ceil(self.__last_headers_x_count / 6)
 
+    def api_get_games_list(self, page: int = 0, **kwargs) -> list:
+        """kwargs:
+        search: str = None,
+        genres: str = None,
+        platforms: str = None,
+        user_ratings: tuple = None"""
+        additional = f'games/?fields=name,cover,version_title&limit=6&offset={page * 6}'
+        if kwargs.get('search') is None:
+            additional += '&order=popularity:desc'
+        filters = self.__generate_filters(**kwargs)
+        data = self.__api_get(additional + filters)
+        for i in range(len(data)):
+            if data[i].get('cover') is not None:
+                data[i]['cover'] = self.api_get_image(data[i].get('cover'), True)
+        print(data)
+        return data
 
-temp = IGDB()
-temp.api_get_game(search=input('Введите название игры'),
-                  fields='screenshots,cover')
-
-# rating, version_title, aggregated_rating, screenshots, summary, cover, platforms, genres
-
-# {'id': 45553, 'first_release_date': 681004800}, {'id': 37337}
-
+    def api_get_image(self, image_id: int, cover=False) -> str:
+        result = 'covers/' if cover else 'screenshots/'
+        data = self.__api_get(result + str(image_id) + '?fields=url')
+        return 'https:' + data[0].get('url').replace('t_thumb', 't_logo_med' if cover else 't_screenshot_med')
