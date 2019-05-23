@@ -2,7 +2,7 @@ function openCloseNav() {
   let leftMenu = document.getElementById("mySidenav");
 
   if(leftMenu.style.width === "0px" || leftMenu.style.width === "") {
-    leftMenu.style.width = "30%";
+    leftMenu.style.width = "200%";
     document.getElementById("main").style.marginLeft = "15%";
     leftMenu.style.paddingLeft = "10px";
     leftMenu.style.paddingRight = "10px";
