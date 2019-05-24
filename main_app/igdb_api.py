@@ -20,7 +20,7 @@ class IGDB:
         print(f'{self.__api_url}{additional_string}')
         data = requests.get(f'{self.__api_url}{additional_string}', headers=self.__headers)
         x_count = int(data.headers.get('X-Count', 1))
-        if x_count > 1:
+        if x_count > 2:
             self.__last_headers_x_count = x_count
         return data.json()
 
@@ -35,7 +35,7 @@ class IGDB:
         return data
 
     def __generate_filters(self, search: str = None, genres: str = None,
-                           platforms: str = None, user_ratings: tuple = None) -> dict:
+                           platforms: str = None, user_ratings: tuple = None, **kwargs) -> dict:
         result = {}
         filters = []
         if search:
@@ -60,7 +60,7 @@ class IGDB:
         """returns total amount of pages for last game list"""
         return math.ceil(self.__last_headers_x_count / self.__limit)
 
-    def api_get_games_list(self, page: int = 0, **kwargs) -> list:
+    def api_get_games_list(self, page: str = '1', **kwargs) -> list:
         """kwargs:
         search: str = None,
         genres: str = None,
@@ -70,7 +70,7 @@ class IGDB:
         additional = {
             'fields': 'name,cover,version_title,rating',
             'limit': self.__limit,
-            'offset': page * self.__limit}
+            'offset': (int(page) - 1) * self.__limit}
         if kwargs.get('search') is None:
             additional['order'] = 'popularity:desc'
         filters = self.__generate_filters(**kwargs)
@@ -86,5 +86,5 @@ class IGDB:
     def api_get_image(self, image_id: int, cover=False) -> str:
         result = 'covers/' if cover else 'screenshots/'
         data = self.__api_get(result + str(image_id) + '?fields=url')
-        return 'https:' + data[0].get('url').replace('t_thumb', 't_logo_med' if cover
+        return 'https:' + data[0].get('url').replace('t_thumb', 't_cover_big' if cover
                                                      else 't_screenshot_med')

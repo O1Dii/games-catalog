@@ -11,6 +11,7 @@
 {% endblock %}
 
 {% block body %}
+    <form method="post">{% csrf_token %}
     <div class="h-100 row">
         <div class="col-2">
             <div id="filter-btn-div">
@@ -32,31 +33,56 @@
                   <input value="0" min="0" max="10" step="1" type="range">
                   <input value="10" min="0" max="10" step="1" type="range">
                 </section>
-                <button id="apply_filters_btn">Apply</button>
+                <button id="apply_filters_btn" type="submit">Apply</button>
             </div>
         </div>
         <div id="main" class="col-8">
-            <input type="text" placeholder="Search...">
+            <input id="main-search" type="text" name="search" placeholder="Search...">
             <div class="container-fluid d-flex flex-column flex-row" id="games-list">
-                <div class="my-row row flex-fill d-flex">
-                    {% for i in '123' %}
-                        {% include 'game_template.html' %}
-                    {% endfor %}
-                </div>
-                <div class="my-row row flex-fill d-flex" >
-                    {% for i in '1' %}
+                <div class="d-flex flex-wrap flex-row align-content-center justify-content-center">
+                    {% for game in games %}
                         {% include 'game_template.html' %}
                     {% endfor %}
                 </div>
                 <div class="row d-flex justify-content-center">
                     <div class="row pages-container d-flex flex-wrap justify-content-center">
-                        <div class="each-page-container align-self-start"><button type="button" class="pages-button">1</button></div>
-                        <div class="each-page-container align-self-end"><button type="button" class="pages-button">2</button></div>
-                        <div class="each-page-container align-self-end"><button type="button" class="pages-button">3</button></div>
+                        {% if pages_amount > 4 %}
+                            {% if left_pages %}
+                                {% if left_pages.0 > '1' %}
+                                    {% with page='1' %}
+                                        {% include 'page_button_template.html' %}
+                                    {% endwith %}
+                                    <div class="align-self-end">
+                                        <p>...</p>
+                                    </div>
+                                {% endif %}
+                                {% for page in left_pages %}
+                                    {% include 'page_button_template.html' %}
+                                {% endfor %}
+                            {% endif %}
+                            <div class="each-page-container align-self-start">
+                                <button type="submit" name="page" value="{{ current_page }}" class="pages-button">
+                                    {{ current_page }}
+                                </button>
+                            </div>
+                            {% if right_pages %}
+                                {% for page in right_pages %}
+                                    {% include 'page_button_template.html' %}
+                                {% endfor %}
+                                {% if pages_amount > end %}
+                                    <div class="align-self-end">
+                                        <p>...</p>
+                                    </div>
+                                    {% with page=pages_amount %}
+                                        {% include 'page_button_template.html' %}
+                                    {% endwith %}
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    </form>
 {% endblock %}
