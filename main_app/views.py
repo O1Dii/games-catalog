@@ -8,7 +8,7 @@ class MainPageView(TemplateView):
 
     def get_context_data(self, **kwargs):
         client = IGDB(6)
-        context = super(MainPageView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         current_page = self.request.GET.get('page', 1)
         games = client.api_get_games_list(**{key: value for key, value in self.request.GET.items()})
         pages_amount = client.api_get_last_pages_amount()
