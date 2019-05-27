@@ -19,9 +19,28 @@ function openCloseNav() {
 
 
 
-function getVals(){
+// function send_ajax() {
+//   $.ajax({
+//     type: "POST",
+//     url: "/",
+//     data: {
+//       'search': $("main-search").val(),
+//       'csrfmiddlewaretoken':$("input[name='csrfmiddlewaretoken']").val(),
+//     },
+//   })
+// }
+
+
+
+function getVals(temp=false){
   // Get slider values
-  var parent = this.parentNode;
+  var parent;
+  if(temp){
+    parent = this.document;
+  }
+  else{
+    parent = this.parentNode;
+  }
   var slides = parent.getElementsByTagName("input");
     var slide1 = parseFloat( slides[0].value );
     var slide2 = parseFloat( slides[1].value );
@@ -30,6 +49,7 @@ function getVals(){
 
   var displayElement = parent.getElementsByClassName("rangeValues")[0];
       displayElement.innerHTML = slide1 + " - " + slide2;
+      return [slide1, slide2]
 }
 
 window.onload = function(){

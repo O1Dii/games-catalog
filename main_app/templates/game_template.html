@@ -1,4 +1,15 @@
 {% load static %}
-<div class="col-4">
-<img style="height: 100%; width: 100%" src="{% static 'media/kitty.jpg' %}" alt="">
+<div id="main-game-container">
+    <img id="image-cover" src="{{ game.cover }}" alt="">
+    <div id="cover-container">
+        <div id="background-container"></div>
+        <div id="background-dark">
+            <h3 id="game_name">{{ game.name }}</h3>
+            <h5 id="game_version_title">{{ game.version_title }}</h5>
+            <div id="buttons-open-must-container" class="d-flex flex-nowrap flex-row">
+                <button class="cover-button">Open</button>
+                <button class="cover-button">MUST</button>
+            </div>
+        </div>
+    </div>
 </div>

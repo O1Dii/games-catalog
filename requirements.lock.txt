@@ -1,0 +1,11 @@
+Django==2.2.1
+Pillow==6.0.0
+certifi==2019.3.9
+chardet==3.0.4
+idna==2.8
+pip==19.1.1
+pytz==2019.1
+requests==2.22.0
+setuptools==41.0.1
+sqlparse==0.3.0
+urlib3==1.25.3

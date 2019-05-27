@@ -11,52 +11,92 @@
 {% endblock %}
 
 {% block body %}
-    <div class="h-100 row">
-        <div class="col-2">
-            <div id="filter-btn-div">
-                <button type="button" class="floating-button" onclick="openCloseNav()"></button>
-                <h1 id="filters-title">Filters</h1>
+    <form method="get">
+        <div class="h-100 row">
+            <div class="col-2">
+                <div id="filter-btn-div">
+                    <button type="button" class="floating-button" onclick="openCloseNav()"></button>
+                    <h1 id="filters-title">Filters</h1>
+                </div>
+                <div id="mySidenav" class="sidenav">
+                    <div class="navbar-div">
+                        <h5>Platforms</h5>
+                        <input id="platforms-search" class="navbar-search" type="text">
+                    </div>
+                    <div class="navbar-div">
+                        <h5>Genres</h5>
+                        <span><input id="genres-search" class="navbar-search" type="text"></span>
+                    </div>
+                    <h5>User rating</h5>
+                    <section class="range-slider">
+                      <span class="rangeValues"></span>
+                      <input value="0" min="0" max="10" step="1" type="range">
+                      <input value="10" min="0" max="10" step="1" type="range">
+                    </section>
+                    <button id="apply_filters_btn" type="submit">Apply</button>
+                </div>
             </div>
-            <div id="mySidenav" class="sidenav">
-                <div class="navbar-div">
-                    <h5>Platforms</h5>
-                    <input id="platforms-search" class="navbar-search" type="text">
-                </div>
-                <div class="navbar-div">
-                    <h5>Genres</h5>
-                    <span><input id="genres-search" class="navbar-search" type="text"></span>
-                </div>
-                <h5>User rating</h5>
-                <section class="range-slider">
-                  <span class="rangeValues"></span>
-                  <input value="0" min="0" max="10" step="1" type="range">
-                  <input value="10" min="0" max="10" step="1" type="range">
-                </section>
-                <button id="apply_filters_btn">Apply</button>
-            </div>
-        </div>
-        <div id="main" class="col-8">
-            <input type="text" placeholder="Search...">
-            <div class="container-fluid d-flex flex-column flex-row" id="games-list">
-                <div class="my-row row flex-fill d-flex">
-                    {% for i in '123' %}
-                        {% include 'game_template.html' %}
-                    {% endfor %}
-                </div>
-                <div class="my-row row flex-fill d-flex" >
-                    {% for i in '1' %}
-                        {% include 'game_template.html' %}
-                    {% endfor %}
-                </div>
-                <div class="row d-flex justify-content-center">
-                    <div class="row pages-container d-flex flex-wrap justify-content-center">
-                        <div class="each-page-container align-self-start"><button type="button" class="pages-button">1</button></div>
-                        <div class="each-page-container align-self-end"><button type="button" class="pages-button">2</button></div>
-                        <div class="each-page-container align-self-end"><button type="button" class="pages-button">3</button></div>
+            <div id="main" class="col-8">
+                <input id="main-search" type="text" name="search" placeholder="Search..." value="{{ search }}">
+                <div class="container-fluid d-flex flex-column flex-row" id="games-list">
+                    <div class="d-flex flex-wrap flex-row align-content-center justify-content-center">
+                        {% for game in games %}
+                            {% include 'game_template.html' %}
+                        {% endfor %}
+                    </div>
+                    <div class="row d-flex justify-content-center">
+                        <div class="row pages-container d-flex flex-wrap justify-content-center">
+                            {% if left_pages %}
+                                {% if left_pages.0 > '1' %}
+                                    {% with page='1' %}
+                                        <div class="each-page-container align-self-end">
+                                            <button type="submit" name="page" value="{{ page }}" class="pages-button">
+                                                {{ page }}
+                                            </button>
+                                        </div>
+                                    {% endwith %}
+                                    <div class="align-self-end">
+                                        <p>...</p>
+                                    </div>
+                                {% endif %}
+                                {% for page in left_pages %}
+                                    <div class="each-page-container align-self-end">
+                                        <button type="submit" name="page" value="{{ page }}" class="pages-button">
+                                            {{ page }}
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                            <div class="each-page-container align-self-start">
+                                <button type="submit" name="page" value="{{ current_page }}" class="pages-button">
+                                    {{ current_page }}
+                                </button>
+                            </div>
+                            {% if right_pages %}
+                                {% for page in right_pages %}
+                                    <div class="each-page-container align-self-end">
+                                        <button type="submit" name="page" value="{{ page }}" class="pages-button">
+                                            {{ page }}
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                                {% if pages_amount > end %}
+                                    <div class="align-self-end">
+                                        <p>...</p>
+                                    </div>
+                                    {% with page=pages_amount %}
+                                        <div class="each-page-container align-self-end">
+                                            <button type="submit" name="page" value="{{ page }}" class="pages-button">
+                                                {{ page }}
+                                            </button>
+                                        </div>
+                                    {% endwith %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
+    </form>
 {% endblock %}
