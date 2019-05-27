@@ -79,7 +79,6 @@ class IGDB:
         data = self.__api_get(f'{category}{encoded_url}')
         images_query = list(set(map(lambda each: each.get('cover', ''), data)))
         images_query.remove('')
-        print(images_query)
         images = dict(self.api_get_image(images_query, True))
         for i, each in enumerate(data):
             if each:
