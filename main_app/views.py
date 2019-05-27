@@ -16,11 +16,13 @@ class MainPageView(TemplateView):
         right_pages = list([str(i) for i in range(min(int(current_page) + 1, pages_amount + 1),
                                                   min(int(current_page) + 4, pages_amount + 1))])
         end = int(right_pages[-1]) if right_pages else pages_amount
-        context['games'] = games
-        context['search'] = self.request.GET.get('search', '')
-        context['pages_amount'] = pages_amount
-        context['current_page'] = current_page
-        context['left_pages'] = left_pages
-        context['right_pages'] = right_pages
-        context['end'] = end
+        context.update({
+            'games': games,
+            'search': self.request.GET.get('search', ''),
+            'pages_amount': pages_amount,
+            'current_page': current_page,
+            'left_pages': left_pages,
+            'right_pages': right_pages,
+            'end': end
+        })
         return context
