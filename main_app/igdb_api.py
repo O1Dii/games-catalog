@@ -20,7 +20,7 @@ class IGDB:
         print(f'{self.__api_url}{additional_string}')
         data = requests.get(f'{self.__api_url}{additional_string}', headers=self.__headers)
         x_count = int(data.headers.get('X-Count', 1))
-        if x_count > 2:
+        if x_count > self.__limit:
             self.__last_headers_x_count = x_count
         return data.json()
 
@@ -77,14 +77,19 @@ class IGDB:
         additional.update(filters)
         encoded_url = urlencode(additional, quote_via=quote_plus)
         data = self.__api_get(f'{category}{encoded_url}')
+        images_query = list(set(map(lambda each: each.get('cover', ''), data)))
+        images_query.remove('')
+        print(images_query)
+        images = dict(self.api_get_image(images_query, True))
         for i, each in enumerate(data):
             if each:
                 if each.get('cover'):
-                    data[i]['cover'] = self.api_get_image(each.get('cover'), True)
+                    data[i]['cover'] = images.get(each.get('cover'))
         return data
 
-    def api_get_image(self, image_id: int, cover=False) -> str:
+    def api_get_image(self, images_id: list, cover=False):
         result = 'covers/' if cover else 'screenshots/'
-        data = self.__api_get(result + str(image_id) + '?fields=url')
-        return 'https:' + data[0].get('url').replace('t_thumb', 't_cover_big' if cover
-                                                     else 't_screenshot_med')
+        data = self.__api_get(result + ','.join(map(str, images_id)) + '?fields=url')
+        for each in data:
+            yield each.get('id'), 'https:' + each.get('url', '').replace('t_thumb', 't_cover_big' if cover
+                                                         else 't_screenshot_med')

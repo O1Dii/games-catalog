@@ -1,21 +1,12 @@
 {% load static %}
-<div style="position: relative; height: 30em; width: 20em">
-    <img style="height: 100%; width: 100%;" src="{{ game.cover }}" alt="">
-    <div style="height: 100%; width: 100%; position: relative; top: -100%">
-        <div style="top: 60%; position: relative; width: 100%; height: 40%; background-color: black; opacity: 0.5"></div>
-        <div style="position: relative; top: 20%; height: 40%; margin-left: 10px;">
-            <h3 style="color: white;">{{ game.name }}</h3>
-            <h5 style="color: white;">{{ game.version_title }}</h5>
-            <div style="position: absolute; bottom: 0;" class="d-flex flex-nowrap flex-row">
-                <style>
-                    .cover-button{
-                        border-radius: 20px;
-                        background-color: black;
-                        color: white;
-                        margin-bottom: 10px;
-                        margin-right: 10px;
-                    }
-                </style>
+<div id="main-game-container">
+    <img id="image-cover" src="{{ game.cover }}" alt="">
+    <div id="cover-container">
+        <div id="background-container"></div>
+        <div id="background-dark">
+            <h3 id="game_name">{{ game.name }}</h3>
+            <h5 id="game_version_title">{{ game.version_title }}</h5>
+            <div id="buttons-open-must-container" style="position: absolute; bottom: 0;" class="d-flex flex-nowrap flex-row">
                 <button class="cover-button">Open</button>
                 <button class="cover-button">MUST</button>
             </div>
