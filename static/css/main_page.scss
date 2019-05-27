@@ -216,6 +216,10 @@ section.range-slider input::-moz-range-thumb {
     height: 40%;
     margin-left: 10px;
 }
+#buttons-open-must-container{
+    position: absolute;
+    bottom: 0;
+}
 .cover-button{
     border-radius: 20px;
     background-color: black;
