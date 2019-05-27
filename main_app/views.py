@@ -19,6 +19,10 @@ class MainPageView(TemplateView):
         context.update({
             'games': games,
             'search': self.request.GET.get('search', ''),
+            'platforms': self.request.GET.get('platforms', ''),
+            'genres': self.request.GET.get('genres', ''),
+            'ur1': self.request.GET.get('ur1', '0'),
+            'ur2': self.request.GET.get('ur2', '10'),
             'pages_amount': pages_amount,
             'current_page': current_page,
             'left_pages': left_pages,

@@ -35,12 +35,8 @@ function openCloseNav() {
 function getVals(temp=false){
   // Get slider values
   var parent;
-  if(temp){
-    parent = this.document;
-  }
-  else{
-    parent = this.parentNode;
-  }
+  parent = this.parentNode;
+
   var slides = parent.getElementsByTagName("input");
     var slide1 = parseFloat( slides[0].value );
     var slide2 = parseFloat( slides[1].value );
@@ -49,7 +45,6 @@ function getVals(temp=false){
 
   var displayElement = parent.getElementsByClassName("rangeValues")[0];
       displayElement.innerHTML = slide1 + " - " + slide2;
-      return [slide1, slide2]
 }
 
 window.onload = function(){
