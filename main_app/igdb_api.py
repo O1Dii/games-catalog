@@ -20,10 +20,8 @@ class IGDB:
         print(f'{self.__api_url}{additional_string}')
         data = requests.get(f'{self.__api_url}{additional_string}', headers=self.__headers)
         j_data = data.json()
-        if isinstance(j_data, list):
-            if isinstance(j_data[0], dict):
-                if j_data[0].get('status') == 400:
-                    return []
+        if j_data and j_data[0].get('status') == 400:
+            return []
         x_count = int(data.headers.get('X-Count', 1))
         if x_count > self.__limit:
             self.__last_headers_x_count = x_count
@@ -86,12 +84,9 @@ class IGDB:
             additional['order'] = 'popularity:desc'
         filters = self.__generate_filters(**kwargs)
         additional.update(filters)
-        print(additional)
         encoded_url = urlencode(additional, quote_via=quote_plus)
         data = self.__api_get(f'{category}{encoded_url}')
-        images_query = list(set(map(lambda each: each.get('cover', ''), data)))
-        if '' in images_query:
-            images_query.remove('')
+        images_query = list(set(each.get('cover', '') for each in data if each.get('cover')))
         images = dict(self.api_get_image(images_query, True))
         for i, each in enumerate(data):
             if each:
