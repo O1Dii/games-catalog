@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.views.generic import TemplateView
 
 from .igdb_api import IGDB
@@ -30,3 +32,28 @@ class MainPageView(TemplateView):
             'end': end
         })
         return context
+
+
+class DetailPageView(TemplateView):
+    template_name = 'detail_page.html'
+
+    def get_context_data(self, game_id, **kwargs):
+        context = super().get_context_data(**kwargs)
+        client = IGDB(6)
+        game = client.api_get_game(game_id)[0]
+        print(game)
+        context.update({
+            'name': game.get('name', ''),
+            'version_title': game.get('version_title', ''),
+            'description': game.get('summary', ''),
+            'release_date': datetime.utcfromtimestamp(game.get('first_release_date')).strftime('%Y %b %d'),
+            'screenshots': game.get('screenshots'),
+            'user_ratings': game.get('rating', '0'),
+            'critics_ratings': game.get('aggregated_rating', '0'),
+            'genres': game.get('genres'),
+            'platforms': game.get('platforms'),
+            'users_reviews': game.get('rating_count', '0'),
+            'critics_reviews': game.get('aggregated_rating_count', '0')
+        })
+        return context
+

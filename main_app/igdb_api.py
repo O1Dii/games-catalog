@@ -20,8 +20,10 @@ class IGDB:
         print(f'{self.__api_url}{additional_string}')
         data = requests.get(f'{self.__api_url}{additional_string}', headers=self.__headers)
         j_data = data.json()
-        if j_data and j_data[0].get('status') == 400:
-            return []
+        if isinstance(j_data, list):
+            if isinstance(j_data[0], dict):
+                if j_data[0].get('status') == 400:
+                    return []
         x_count = int(data.headers.get('X-Count', 1))
         if x_count > self.__limit:
             self.__last_headers_x_count = x_count
@@ -30,12 +32,32 @@ class IGDB:
     def api_get_game(self, game_id):
         category = f'games/{game_id}?'
         additional = {
-            'fields': 'rating,version_title,aggregated_rating,'
-                      'screenshots,summary,cover,platforms,genres'
+            'fields': 'name,rating,version_title,aggregated_rating,'
+                      'screenshots,summary,platforms,genres,first_release_date,'
+                      'rating_count,aggregated_rating_count'
         }
         encoded_url = urlencode(additional)
         data = self.__api_get(f'{category}{encoded_url}')
+        for i, each in enumerate(data):
+            if each.get('platforms'):
+                data[i]['platforms'] = self.api_get_names('platforms', each.get('platforms'))
+            if each.get('genres'):
+                data[i]['genres'] = self.api_get_names('genres', each.get('genres'))
+            if each.get('rating'):
+                data[i]['rating'] = round(each.get('rating') / 10, 2)
+            if each.get('aggregated_rating'):
+                data[i]['aggregated_rating'] = round(each.get('aggregated_rating') / 10, 2)
+            if each.get('screenshots'):
+                images = dict(self.api_get_image(each.get('screenshots'), False))
+                data[i]['screenshots'] = images.values()
+                print(data[i])
         return data
+
+    def api_get_names(self, category: str, id_list: list):
+        category += '/' + ','.join(map(str, id_list))
+        category += '?fields=name'
+        data = self.__api_get(category)
+        return [each.get('name') for each in data if each.get('name')]
 
     def api_find(self, category: str, search: str) -> list:
         category += '/?'
