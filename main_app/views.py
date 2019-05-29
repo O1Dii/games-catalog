@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
 
+from main_app.forms import UserCreationForm
 from .igdb_api import IGDB
 
 
@@ -57,3 +58,10 @@ class DetailPageView(TemplateView):
         })
         return context
 
+
+class RegisterPageView(FormView):
+    template_name = 'register_page.html'
+    form_class = UserCreationForm
+
+    def form_valid(self, form):
+        return super().form_valid(form)
