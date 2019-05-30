@@ -66,7 +66,7 @@ class DetailPageView(LoginRequiredMixin, TemplateView):
 
 
 class RegisterPageView(FormView):
-    template_name = 'register_page.html'
+    template_name = 'login_register_page.html'
     form_class = UserCreationForm
     success_url = reverse_lazy('main_app:main_page')
 

@@ -1,0 +1,18 @@
+$primary-color: red;
+$secondary-color: white;
+$black-color: black;
+
+input{
+    border: none;
+    border-bottom: 2px solid $black-color;
+    border-left: 2px solid $black-color;
+}
+#submit-btn{
+    background-color: $primary-color;
+    color: $secondary-color;
+    border-color: $primary-color;
+    border-style: solid;
+    width: 40%;
+    height: 40px;
+    align-self: center;
+}

@@ -2,10 +2,6 @@ $primary-color: red;
 $secondary-color: white;
 $black-color: black;
 
-@mixin element-color($color) {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="/static/media/arrow_down.svg"><g stroke="#{$color}" ... /></g></svg>');
-}
-
 input{
     width: 100%;
     border: none;

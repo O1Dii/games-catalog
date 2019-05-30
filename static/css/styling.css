@@ -8,16 +8,43 @@ html, body {
   -moz-box-shadow: 0 3px 5px 0 black;
   box-shadow: 0 3px 5px 0 black;
   position: relative;
-  z-index: 5; }
+  z-index: 5;
+  align-items: center; }
 
-.nav_item {
+.nav-item {
   color: white; }
 
-ul {
+.nav div {
+  align-items: center;
+  display: inline-flex; }
+
+.nav-button {
+  color: red;
+  background-color: white;
+  font-size: 25px;
+  margin: 10px;
+  border-color: white;
+  border-style: solid; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green;
+  margin-right: 0; }
+
+.nav p, ins {
+  font-size: 25px;
+  color: white;
+  margin: 0; }
+
+.nav ins {
+  margin-left: 10px; }
+
+.nav ul {
   list-style-type: none;
   padding: 0 !important;
   margin: 0 !important;
   float: left; }
 
-li {
+.nav li {
   float: left; }

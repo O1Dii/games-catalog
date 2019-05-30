@@ -11,15 +11,34 @@
 {% endblock %}
 </head>
 <body>
-<nav class="nav">
+<nav class="nav justify-content-between">
     <ul>
         <li>
             <img src="{% static 'media/logo.png' %}" height="50" width="65">
         </li>
         <li>
-            <h1 class="nav_item">GameMuster</h1>
+            <h1 class="nav-item">GameMuster</h1>
         </li>
     </ul>
+    <div>
+        {% if request.user.is_anonymous %}
+            <a href="{% url 'main_app:register_page' %}">
+                <button class="nav-button">Sign Up</button>
+            </a>
+            <p>or</p>
+            <a href="{% url 'main_app:login_page' %}">
+                <button class="nav-button">Log In</button>
+            </a>
+        {% else %}
+            <p>Hello</p><ins>{{ request.user.username }}!</ins>
+            <a href="">
+                <button class="nav-button green-button">My MUSTs</button>
+            </a>
+            <a href="{% url 'main_app:logout' %}">
+                <button class="nav-button">Log out</button>
+            </a>
+        {% endif %}
+    </div>
 </nav>
 {% block body %}
 {% endblock %}

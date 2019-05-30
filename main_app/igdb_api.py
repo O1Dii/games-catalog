@@ -83,8 +83,10 @@ class IGDB:
             platforms = ','.join(map(str, self.api_find('platforms', platforms)))
             filters['filter[platforms][any]'] = platforms
         if ur1 or ur2:
-            filters['filter[rating][gt]'] = min(ur1, ur2)
-            filters['filter[rating][lt]'] = int(max(ur1, ur2)) * 10
+            ur1 = int(ur1)
+            ur2 = int(ur2)
+            filters['filter[rating][gt]'] = min(ur1, ur2) * 10
+            filters['filter[rating][lt]'] = max(ur1, ur2) * 10
         return filters
 
     def api_get_last_pages_amount(self) -> int:
