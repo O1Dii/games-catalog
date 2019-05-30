@@ -15,16 +15,15 @@ class Twitter:
                               resource_owner_secret=settings.ACCESS_TOKEN_SECRET)
 
     def __parse_tweets(self, tweets):
-        for each in tweets:
-            result = {
-                'date': datetime.strptime(each.get('created_at'),
+        result = []
+        for tweet in tweets:
+            result.append({
+                'date': datetime.strptime(tweet['created_at'],
                                           '%a %b %d %X %z %Y').strftime('%d.%m.%Y %H:%M'),
-                'text': each.get('text')
-            }
-            user = each.get('user', {}).get('name')
-            if user:
-                result['author'] = user
-            yield result
+                'text': tweet['text'],
+                'author': tweet['user']['name']
+            })
+        return result
 
     def get_tweets_via_hashtag(self, search: str):
         encoded_search = quote('#' + search)
