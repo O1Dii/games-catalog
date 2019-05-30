@@ -63,9 +63,9 @@
             <div class="col-3">
                 <h2>#{{ name }} Tweets</h2>
                 <div class="d-flex flex-wrap flex-column">
-                    {% include 'tweet_template.html' %}
-                    {% include 'tweet_template.html' %}
-                    {% include 'tweet_template.html' %}
+                    {% for tweet in tweets %}
+                        {% include 'tweet_template.html' %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

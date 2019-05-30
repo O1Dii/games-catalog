@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 
@@ -9,7 +10,7 @@ from .igdb_api import IGDB
 from .twitter_api import Twitter
 
 
-class MainPageView(TemplateView):
+class MainPageView(LoginRequiredMixin, TemplateView):
     template_name = 'main_page.html'
 
     def get_context_data(self, **kwargs):
@@ -38,14 +39,15 @@ class MainPageView(TemplateView):
         return context
 
 
-class DetailPageView(TemplateView):
+class DetailPageView(LoginRequiredMixin, TemplateView):
     template_name = 'detail_page.html'
 
     def get_context_data(self, game_id, **kwargs):
         context = super().get_context_data(**kwargs)
         client = IGDB(6)
-        twitter = Twitter()
         game = client.api_get_game(game_id)[0]
+        twitter = Twitter()
+        tweets = list(twitter.get_tweets_via_hashtag(game.get('name')))
         context.update({
             'name': game.get('name', ''),
             'version_title': game.get('version_title', ''),
@@ -57,7 +59,8 @@ class DetailPageView(TemplateView):
             'genres': game.get('genres'),
             'platforms': game.get('platforms'),
             'users_reviews': game.get('rating_count', '0'),
-            'critics_reviews': game.get('aggregated_rating_count', '0')
+            'critics_reviews': game.get('aggregated_rating_count', '0'),
+            'tweets': tweets
         })
         return context
 

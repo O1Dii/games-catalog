@@ -20,7 +20,7 @@ class IGDB:
         print(f'{self.__api_url}{additional_string}')
         data = requests.get(f'{self.__api_url}{additional_string}', headers=self.__headers)
         j_data = data.json()
-        if isinstance(j_data, list):
+        if isinstance(j_data, list) and len(j_data):
             if isinstance(j_data[0], dict):
                 if j_data[0].get('status') == 400:
                     return []
