@@ -33,11 +33,10 @@ class UserModel(PermissionsMixin, AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 
-    objects = MyUserManager()
-
     USERNAME_FIELD = "username"
-
     REQUIRED_FIELDS = ['email', 'first_name', 'last_name', 'birthday']
+
+    objects = MyUserManager()
 
     def __str__(self):
         return self.email

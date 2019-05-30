@@ -1,10 +1,12 @@
 from datetime import datetime
 
-from django.shortcuts import redirect
+from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 
 from main_app.forms import UserCreationForm
 from .igdb_api import IGDB
+from .twitter_api import Twitter
 
 
 class MainPageView(TemplateView):
@@ -42,8 +44,8 @@ class DetailPageView(TemplateView):
     def get_context_data(self, game_id, **kwargs):
         context = super().get_context_data(**kwargs)
         client = IGDB(6)
+        twitter = Twitter()
         game = client.api_get_game(game_id)[0]
-        print(game)
         context.update({
             'name': game.get('name', ''),
             'version_title': game.get('version_title', ''),
@@ -63,8 +65,11 @@ class DetailPageView(TemplateView):
 class RegisterPageView(FormView):
     template_name = 'register_page.html'
     form_class = UserCreationForm
+    success_url = reverse_lazy('main_app:main_page')
 
     def form_valid(self, form):
-        print(form.cleaned_data)
         form.save()
-        return redirect('/')
+        user = authenticate(username=form.cleaned_data['username'],
+                            password=form.cleaned_data['password1'])
+        login(self.request, user)
+        return super().form_valid(form)

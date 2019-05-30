@@ -9,3 +9,4 @@ requests==2.22.0
 setuptools==41.0.1
 sqlparse==0.3.0
 urlib3==1.25.3
+requests-oauthlib==1.2.0
