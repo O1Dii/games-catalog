@@ -19,42 +19,73 @@ class IGDB:
     def __api_get(self, additional_string: str = ''):
         print(f'{self.__api_url}{additional_string}')
         data = requests.get(f'{self.__api_url}{additional_string}', headers=self.__headers)
+        j_data = data.json()
+        if isinstance(j_data, list) and len(j_data):
+            if isinstance(j_data[0], dict):
+                if j_data[0].get('status') == 400:
+                    return []
         x_count = int(data.headers.get('X-Count', 1))
         if x_count > self.__limit:
             self.__last_headers_x_count = x_count
-        return data.json()
+        return j_data
 
     def api_get_game(self, game_id):
         category = f'games/{game_id}?'
         additional = {
-            'fields': 'rating,version_title,aggregated_rating,'
-                      'screenshots,summary,cover,platforms,genres'
+            'fields': 'name,rating,version_title,aggregated_rating,'
+                      'screenshots,summary,platforms,genres,first_release_date,'
+                      'rating_count,aggregated_rating_count'
         }
         encoded_url = urlencode(additional)
         data = self.__api_get(f'{category}{encoded_url}')
+        for i, each in enumerate(data):
+            if each.get('platforms'):
+                data[i]['platforms'] = self.api_get_names('platforms', each.get('platforms'))
+            if each.get('genres'):
+                data[i]['genres'] = self.api_get_names('genres', each.get('genres'))
+            if each.get('rating'):
+                data[i]['rating'] = round(each.get('rating') / 10, 2)
+            if each.get('aggregated_rating'):
+                data[i]['aggregated_rating'] = round(each.get('aggregated_rating') / 10, 2)
+            if each.get('screenshots'):
+                images = dict(self.api_get_image(each.get('screenshots'), False))
+                data[i]['screenshots'] = images.values()
+                print(data[i])
         return data
 
+    def api_get_names(self, category: str, id_list: list):
+        category += '/' + ','.join(map(str, id_list))
+        category += '?fields=name'
+        data = self.__api_get(category)
+        return [each.get('name') for each in data if each.get('name')]
+
+    def api_find(self, category: str, search: str) -> list:
+        category += '/?'
+        additional = {
+            'search': search
+        }
+        encoded_url = urlencode(additional)
+        data = self.__api_get(f'{category}{encoded_url}')
+        if isinstance(data, list):
+            return [each.get('id') for each in data]
+        else:
+            return []
+
     def __generate_filters(self, search: str = None, genres: str = None,
-                           platforms: str = None, user_ratings: tuple = None, **kwargs) -> dict:
-        result = {}
-        filters = []
+                           platforms: str = None, ur1: str = None, ur2: str = None, **kwargs) -> dict:
+        filters = {}
         if search:
-            result['search'] = search
+            filters['search'] = search
         if genres:
-            filters.append(f'[genres][eq]={genres}')
+            genres = ','.join(map(str, self.api_find('genres', genres)))
+            filters['filter[genres][any]'] = genres
         if platforms:
-            filters.append(f'[platforms][eq]={platforms}')
-        if user_ratings:
-            filters.append('[rating]')
-            if user_ratings[0]:
-                filters[-1] += f'[gt]={user_ratings[0] * 10}'
-            if user_ratings[0] and user_ratings[1]:
-                filters[-1] += ','
-            if user_ratings[1]:
-                filters[-1] += f'[lt]={user_ratings[1] * 10}'
-        if filters:
-            result[''] = f'filter{",".join(filters)}'
-        return result
+            platforms = ','.join(map(str, self.api_find('platforms', platforms)))
+            filters['filter[platforms][any]'] = platforms
+        if ur1 or ur2:
+            filters['filter[rating][gt]'] = min(ur1, ur2)
+            filters['filter[rating][lt]'] = int(max(ur1, ur2)) * 10
+        return filters
 
     def api_get_last_pages_amount(self) -> int:
         """returns total amount of pages for last game list"""
@@ -71,14 +102,13 @@ class IGDB:
             'fields': 'name,cover,version_title,rating',
             'limit': self.__limit,
             'offset': (int(page) - 1) * self.__limit}
-        if kwargs.get('search') is None:
+        if not kwargs.get('search'):
             additional['order'] = 'popularity:desc'
         filters = self.__generate_filters(**kwargs)
         additional.update(filters)
         encoded_url = urlencode(additional, quote_via=quote_plus)
         data = self.__api_get(f'{category}{encoded_url}')
-        images_query = list(set(map(lambda each: each.get('cover', ''), data)))
-        images_query.remove('')
+        images_query = list(set(each.get('cover', '') for each in data if each.get('cover')))
         images = dict(self.api_get_image(images_query, True))
         for i, each in enumerate(data):
             if each:

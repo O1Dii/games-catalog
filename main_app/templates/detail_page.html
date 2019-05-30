@@ -3,6 +3,7 @@
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/detail_page.css' %}">
+    <script src="{% static 'scripts/details.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -11,24 +12,23 @@
             <div class="col-9">
                 <div class="container-fluid">
                     <div id="title-container" class="row">
-                        <div class="col-3"><h1>PACMAN</h1></div>
-                        <div class="col-2 text-with-background"><h1>MUST</h1></div>
+                        <div class="col-3"><h1>{{ name }}</h1></div>
+                        <div class="d-flex text-with-background align-items-center"><h1>MUST</h1></div>
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <h5>arcade oldschool</h5>
+                            <h5>{{ version_title }}</h5>
                             <h3>Description</h3>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam, animi architecto assumenda aut beatae, commodi consectetur cupiditate eos eum fugiat harum id ipsam iusto maxime nobis nostrum odit perspiciatis porro quos recusandae sapiente suscipit tenetur unde, voluptate voluptatem! Aperiam beatae deleniti dolorem iusto laudantium necessitatibus non numquam officiis perferendis qui quia quidem quod rem sunt suscipit, tempore veniam vitae voluptas? Consectetur delectus expedita id necessitatibus.</p>
+                            <p>{{ description }}</p>
                             <h3>Release Date</h3>
-                            <p>Nov 1992</p>
+                            <p>{{ release_date }}</p>
                             <h3>Screenshots</h3>
                             <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
-                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
-                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
-                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
-                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
-                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
-                                <div class="marg-bottom marg-right"><img class="screenshot" src="{% static 'media/kitty.jpg' %}"></div>
+                                {% for screenshot in screenshots %}
+                                    <div class="marg-bottom marg-right">
+                                        <img class="screenshot" src="{{ screenshot }}">
+                                    </div>
+                                {% endfor %}
                             </div>
                         </div>
                         <div class="col-4">
@@ -37,33 +37,35 @@
                             <div id="users-rating" class="d-flex text-with-background marg-bottom align-items-center
                              justify-content-between">
                                 <h5>Users</h5>
-                                <h5>0.0 (0 review)</h5>
+                                <h5 id="users_rating_value">{{ user_ratings }} ({{ users_reviews }} review)</h5>
                             </div>
                             <div id="critics-rating" class="d-flex text-with-background align-items-center
                              justify-content-between">
                                 <h5>Critics</h5>
-                                <h5>0.0 (0 review)</h5>
+                                <h5 id="critics_rating_value">{{ critics_ratings }} ({{ critics_reviews }} review)</h5>
                             </div>
                             <h3>Genres</h3>
-                            <div class="d-flex flex-nowrap flex-row">
-                                <div class="text-with-background marg-right"><h5>Arcade</h5></div>
-                                <div class="text-with-background marg-right"><h5>Action</h5></div>
+                            <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
+                                {% for genre in genres %}
+                                    <div class="text-with-background marg-right marg-bottom"><h5>{{ genre }}</h5></div>
+                                {% endfor %}
                             </div>
                             <h3>Platforms</h3>
-                            <div class="d-flex flex-nowrap flex-row">
-                                <div class="text-with-background marg-right"><h5>PC</h5></div>
-                                <div class="text-with-background marg-right"><h5>PS4</h5></div>
+                            <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
+                                {% for platform in platforms %}
+                                    <div class="text-with-background marg-right marg-bottom"><h5>{{ platform }}</h5></div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="col-3">
-                <h2>#Pacman Tweets</h2>
+                <h2>#{{ name }} Tweets</h2>
                 <div class="d-flex flex-wrap flex-column">
-                    {% include 'tweet_template.html' %}
-                    {% include 'tweet_template.html' %}
-                    {% include 'tweet_template.html' %}
+                    {% for tweet in tweets %}
+                        {% include 'tweet_template.html' %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

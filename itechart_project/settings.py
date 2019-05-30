@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from django.urls import reverse_lazy
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -81,6 +83,11 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'main_app.UserModel'
+
+AUTHENTICATION_BACKENDS = ['main_app.backends.MyAuthBackend',
+                           'django.contrib.auth.backends.ModelBackend']
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -118,8 +125,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+DATE_INPUT_FORMATS = ['%d.%m.%Y']
+
+LOGIN_URL = reverse_lazy('main_app:register_page')
+
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
 IGDB_API_KEY = os.getenv('IGDB_API_KEY')
+CONSUMER_TOKEN = os.getenv('TWITTER_CONSUMER_TOKEN')
+CONSUMER_TOKEN_SECRET = os.getenv('TWITTER_CONSUMER_TOKEN_SECRET')
+ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
+ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')

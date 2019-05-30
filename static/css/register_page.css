@@ -1,0 +1,13 @@
+input {
+  border: none;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black; }
+
+#submit-btn {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid;
+  width: 40%;
+  height: 40px;
+  align-self: center; }

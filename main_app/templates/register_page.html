@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <style>
+        input{
+            border: none;
+            border-bottom: 2px solid black;
+            border-left: 2px solid black;
+        }
+        #submit-btn{
+            color: white;
+            background-color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center">
+        <form method="post">
+            {% csrf_token %}
+            <h2 style="align-self: center;">Sign Up</h2>
+            {{ form.as_p }}
+            <button id="submit-btn" type="submit">Sign me up!</button>
+        </form>
+    </div>
+{% endblock %}
