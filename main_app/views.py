@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from django.shortcuts import redirect
 from django.views.generic import TemplateView, FormView
 
 from main_app.forms import UserCreationForm
@@ -63,5 +64,11 @@ class RegisterPageView(FormView):
     template_name = 'register_page.html'
     form_class = UserCreationForm
 
+    def form_invalid(self, form):
+        print(form.cleaned_data)
+        return redirect('/detail/1')
+
     def form_valid(self, form):
-        return super().form_valid(form)
+        print(form.cleaned_data)
+        form.save()
+        return redirect('/')

@@ -13,7 +13,7 @@ class UserCreationForm(forms.ModelForm):
     last_name = forms.CharField(label='Last Name', widget=forms.TextInput(attrs={
         'placeholder': "Enter last name here..."}))
     birthday = forms.DateField(label='Birthday', widget=forms.DateInput(attrs={
-        'placeholder': 'Enter virthday here...'}))
+        'placeholder': 'Enter virthday here...'}, format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
         "placeholder": "Enter password here..."}))
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={
