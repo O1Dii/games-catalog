@@ -128,6 +128,8 @@ USE_TZ = True
 DATE_INPUT_FORMATS = ['%d.%m.%Y']
 
 LOGIN_URL = reverse_lazy('main_app:register_page')
+LOGIN_REDIRECT_URL = reverse_lazy('main_app:main_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('main_app:register_page')
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')

@@ -13,16 +13,43 @@ html, body{
     box-shadow: 0 3px 5px 0 $black-color;
     position: relative;
     z-index: 5;
+    align-items: center;
 }
-.nav_item{
+.nav-item{
     color: $secondary-color;
 }
-ul{
+.nav div{
+    align-items: center;
+    display: inline-flex;
+}
+.nav-button{
+    color: $primary-color;
+    background-color: $secondary-color;
+    font-size: 25px;
+    margin: 10px;
+    border-color: $secondary-color;
+    border-style: solid;
+}
+.green-button{
+    background-color: green;
+    color: $secondary-color;
+    border-color: green;
+    margin-right: 0;
+}
+.nav p, ins{
+    font-size: 25px;
+    color: $secondary-color;
+    margin: 0;
+}
+.nav ins{
+    margin-left: 10px;
+}
+.nav ul{
     list-style-type: none;
     padding: 0 !important;
     margin: 0 !important;
     float:left;
 }
-li{
+.nav li{
     float: left;
 }
