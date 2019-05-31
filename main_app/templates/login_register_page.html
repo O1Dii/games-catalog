@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block head %}
-    {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/register_page.css' %}"/>
 {% endblock %}
 
@@ -10,7 +10,7 @@
         <form class="d-flex flex-column" method="post">
             {% csrf_token %}
             <div class="d-flex align-items-end flex-column">
-                <h2 style="align-self: center;">Sign Up</h2>
+                <h2 id="sign-up">Sign Up</h2>
                 {{ form.as_p }}
             </div>
             <button id="submit-btn" type="submit">Sign me up!</button>
