@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import MainPageView, DetailPageView, RegisterPageView, LoginPageView, LogoutPageView
+from .views import MainPageView, DetailPageView, RegisterPageView, LoginPageView, LogoutPageView, UserPageView
 
 app_name = 'main_app'
 
@@ -8,5 +8,6 @@ urlpatterns = [
     path('detail/<int:game_id>', DetailPageView.as_view(), name='detail_page'),
     path('registration', RegisterPageView.as_view(), name='register_page'),
     path('logout', LogoutPageView.as_view(), name='logout'),
-    path('login', LoginPageView.as_view(), name='login_page')
+    path('login', LoginPageView.as_view(), name='login_page'),
+    path('user', UserPageView.as_view(), name='user_page')
 ]

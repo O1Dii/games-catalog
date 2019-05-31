@@ -1,7 +1,15 @@
 input {
   border: none;
   border-bottom: 2px solid black;
-  border-left: 2px solid black; }
+  border-left: 2px solid black;
+  width: 200px; }
+
+select {
+  border: none;
+  border-bottom: 2px solid black;
+  border-left: 2px solid black;
+  width: 200px;
+  background-color: transparent; }
 
 #submit-btn {
   background-color: red;

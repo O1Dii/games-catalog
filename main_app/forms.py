@@ -13,7 +13,10 @@ class UserCreationForm(forms.ModelForm):
     last_name = forms.CharField(label='Last Name', widget=forms.TextInput(attrs={
         'placeholder': "Enter last name here..."}))
     birthday = forms.DateField(label='Birthday', widget=forms.DateInput(attrs={
-        'placeholder': 'Enter birthday here...'}, format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+        'placeholder': 'Enter birthday here...', 'id': 'birthday'},
+        format='%d.%m.%Y'), input_formats=('%d.%m.%Y',))
+    gender = forms.ChoiceField(label='Gender', choices=UserModel.GENDER_CHOICES, widget=forms.Select(attrs={
+        'placeholder': 'Select your gender...'}))
     password1 = forms.CharField(label='Password', widget=forms.PasswordInput(attrs={
         "placeholder": "Enter password here..."}))
     password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput(attrs={
@@ -21,7 +24,7 @@ class UserCreationForm(forms.ModelForm):
 
     class Meta:
         model = UserModel
-        fields = ('username', 'email', 'first_name', 'last_name', 'birthday')
+        fields = ('username', 'email', 'first_name', 'last_name', 'birthday', 'gender')
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")

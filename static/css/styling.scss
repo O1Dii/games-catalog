@@ -1,6 +1,4 @@
-$primary-color: red;
-$secondary-color: white;
-$black-color: black;
+@import 'library.scss';
 
 html, body{
     height: 100%;
@@ -36,7 +34,7 @@ html, body{
     border-color: green;
     margin-right: 0;
 }
-.nav p, ins{
+.nav p, .nav ins{
     font-size: 25px;
     color: $secondary-color;
     margin: 0;
@@ -52,4 +50,19 @@ html, body{
 }
 .nav li{
     float: left;
+}
+.nav a:active{
+    text-decoration: none;
+    border-style: none;
+    outline: none;
+}
+.nav a:hover{
+    text-decoration: none;
+    border-style: none;
+    outline: none;
+}
+.nav a:focus{
+    text-decoration: none;
+    border-style: none;
+    outline: none;
 }
