@@ -1,14 +1,24 @@
 from datetime import datetime
 
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import redirect
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.views import View
 from django.views.generic import TemplateView, FormView
+from django.core.mail import EmailMessage
 
 from main_app.forms import UserCreationForm
 from .igdb_api import IGDB
 from .twitter_api import Twitter
+from .tokens import account_activation_token
+from .models import UserModel
 
 
 class MainPageView(LoginRequiredMixin, TemplateView):
@@ -72,11 +82,43 @@ class RegisterPageView(FormView):
     success_url = reverse_lazy('main_app:main_page')
 
     def form_valid(self, form):
-        form.save()
-        user = authenticate(username=form.cleaned_data['username'],
-                            password=form.cleaned_data['password1'])
-        login(self.request, user)
-        return super().form_valid(form)
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        current_site = get_current_site(self.request)
+        email = EmailMessage(
+            "Activate your GameMuster account",
+            render_to_string('email.html', {
+                'user': user,
+                'domain': current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+                'token': account_activation_token.make_token(user),
+            }),
+            to=[form.cleaned_data['email']]
+        )
+        email.send()
+        # user = authenticate(username=form.cleaned_data['username'],
+        #                     password=form.cleaned_data['password1'])
+        # login(self.request, user)
+
+        return HttpResponse('Please confirm your email address to complete the registration')
+        # super().form_valid(form)
+
+
+class ActivationView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = UserModel.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return HttpResponseRedirect(reverse_lazy('main_app:main_page'))
+        else:
+            return HttpResponse('Activation link is invalid!')
 
 
 class LoginPageView(LoginView):

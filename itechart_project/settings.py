@@ -135,6 +135,12 @@ LOGIN_URL = reverse_lazy('main_app:register_page')
 LOGIN_REDIRECT_URL = reverse_lazy('main_app:main_page')
 LOGOUT_REDIRECT_URL = reverse_lazy('main_app:register_page')
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'alexey.prokopenko.test.mail@gmail.com'
+EMAIL_HOST_PASSWORD = 'Bugaga228'
+EMAIL_PORT = 587
+
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
