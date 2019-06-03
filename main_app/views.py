@@ -1,24 +1,45 @@
 from datetime import datetime
 
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect
-from django.template.loader import render_to_string
 from django.urls import reverse_lazy
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import TemplateView, FormView
-from django.core.mail import EmailMessage
 
 from main_app.forms import UserCreationForm
+from main_app.utils import send_email
 from .igdb_api import IGDB
 from .twitter_api import Twitter
 from .tokens import account_activation_token
 from .models import UserModel
+
+
+class SendEmail(TemplateView):
+    template_name = 'send_email.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if context.get('active'):
+            return redirect(reverse_lazy('main_app:main_page'))
+        return self.render_to_response(context)
+
+    def get_context_data(self, user_id, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            user = UserModel.objects.get(id=user_id)
+        except UserModel.DoesNotExist:
+            context['DoesNotExist'] = True
+        else:
+            if user.is_active:
+                context['active'] = True
+            else:
+                send_email(self.request, user)
+                context['active'] = False
+        return context
 
 
 class MainPageView(LoginRequiredMixin, TemplateView):
@@ -79,34 +100,20 @@ class DetailPageView(LoginRequiredMixin, TemplateView):
 class RegisterPageView(FormView):
     template_name = 'login_register_page.html'
     form_class = UserCreationForm
-    success_url = reverse_lazy('main_app:main_page')
+    args_dict = {'user_id': 0}
+    success_url = reverse_lazy('main_app:send_email', kwargs=args_dict)
 
     def form_valid(self, form):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-        current_site = get_current_site(self.request)
-        email = EmailMessage(
-            "Activate your GameMuster account",
-            render_to_string('email.html', {
-                'user': user,
-                'domain': current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': account_activation_token.make_token(user),
-            }),
-            to=[form.cleaned_data['email']]
-        )
-        email.send()
-        # user = authenticate(username=form.cleaned_data['username'],
-        #                     password=form.cleaned_data['password1'])
-        # login(self.request, user)
-
-        return HttpResponse('Please confirm your email address to complete the registration')
-        # super().form_valid(form)
+        self.args_dict['user_id'] = user.id
+        return super().form_valid(form)
 
 
 class ActivationView(View):
     def get(self, request, uidb64, token):
+        uid = 0
         try:
             uid = force_text(urlsafe_base64_decode(uidb64))
             user = UserModel.objects.get(pk=uid)
@@ -116,9 +123,9 @@ class ActivationView(View):
             user.is_active = True
             user.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
-            return HttpResponseRedirect(reverse_lazy('main_app:main_page'))
+            return redirect(reverse_lazy('main_app:main_page'))
         else:
-            return HttpResponse('Activation link is invalid!')
+            return redirect(reverse_lazy('main_app:send_email', kwargs={'user_id': uid}))
 
 
 class LoginPageView(LoginView):

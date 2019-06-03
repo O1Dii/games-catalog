@@ -1,0 +1,22 @@
+@import 'library.scss';
+
+#main-container{
+    padding: 1%;
+    justify-content: center;
+}
+#send-again-btn{
+    background-color: $primary-color;
+    color: $secondary-color;
+    border-color: $primary-color;
+    border-style: solid;
+    width: 40%;
+    height: 40px;
+    align-self: center;
+}
+#main-container h3, #main-container h5{
+    text-align: center;
+}
+#main-container a{
+    display: flex;
+    justify-content: center;
+}
