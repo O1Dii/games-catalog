@@ -1,14 +1,45 @@
 from datetime import datetime
 
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+from django.views import View
 from django.views.generic import TemplateView, FormView
 
 from main_app.forms import UserCreationForm
+from main_app.utils import send_email
 from .igdb_api import IGDB
 from .twitter_api import Twitter
+from .tokens import account_activation_token
+from .models import UserModel
+
+
+class SendEmail(TemplateView):
+    template_name = 'send_email.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if context.get('active'):
+            return redirect(reverse_lazy('main_app:main_page'))
+        return self.render_to_response(context)
+
+    def get_context_data(self, user_id, **kwargs):
+        context = super().get_context_data(**kwargs)
+        try:
+            user = UserModel.objects.get(id=user_id)
+        except UserModel.DoesNotExist:
+            context['DoesNotExist'] = True
+        else:
+            if user.is_active:
+                context['active'] = True
+            else:
+                send_email(self.request, user)
+                context['active'] = False
+        return context
 
 
 class MainPageView(LoginRequiredMixin, TemplateView):
@@ -69,14 +100,32 @@ class DetailPageView(LoginRequiredMixin, TemplateView):
 class RegisterPageView(FormView):
     template_name = 'login_register_page.html'
     form_class = UserCreationForm
-    success_url = reverse_lazy('main_app:main_page')
+    args_dict = {'user_id': 0}
+    success_url = reverse_lazy('main_app:send_email', kwargs=args_dict)
 
     def form_valid(self, form):
-        form.save()
-        user = authenticate(username=form.cleaned_data['username'],
-                            password=form.cleaned_data['password1'])
-        login(self.request, user)
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        self.args_dict['user_id'] = user.id
         return super().form_valid(form)
+
+
+class ActivationView(View):
+    def get(self, request, uidb64, token):
+        uid = 0
+        try:
+            uid = force_text(urlsafe_base64_decode(uidb64))
+            user = UserModel.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            login(request, user, backend='django.contrib.auth.backends.ModelBackend')
+            return redirect(reverse_lazy('main_app:main_page'))
+        else:
+            return redirect(reverse_lazy('main_app:send_email', kwargs={'user_id': uid}))
 
 
 class LoginPageView(LoginView):
@@ -85,3 +134,12 @@ class LoginPageView(LoginView):
 
 class LogoutPageView(LogoutView):
     pass
+
+
+class UserPageView(TemplateView):
+    template_name = 'user_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['age'] = round((datetime.date(datetime.now()) - self.request.user.birthday).days / 365.25)
+        return context

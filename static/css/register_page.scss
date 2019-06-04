@@ -1,11 +1,17 @@
-$primary-color: red;
-$secondary-color: white;
-$black-color: black;
+@import 'library.scss';
 
 input{
     border: none;
     border-bottom: 2px solid $black-color;
     border-left: 2px solid $black-color;
+    width: 200px;
+}
+select{
+    border: none;
+    border-bottom: 2px solid $black-color;
+    border-left: 2px solid $black-color;
+    width: 200px;
+    background-color: transparent;
 }
 #submit-btn{
     background-color: $primary-color;

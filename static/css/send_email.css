@@ -1,0 +1,19 @@
+#main-container {
+  padding: 1%;
+  justify-content: center; }
+
+#send-again-btn {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid;
+  width: 40%;
+  height: 40px;
+  align-self: center; }
+
+#main-container h3, #main-container h5 {
+  text-align: center; }
+
+#main-container a {
+  display: flex;
+  justify-content: center; }

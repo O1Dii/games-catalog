@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/user_page.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id="main-container">
+        <h1>My Profile</h1>
+        <table>
+            <tr>
+                <td class="first">Username</td>
+                <td>|</td>
+                <td>{{ request.user.username }}</td>
+            </tr>
+            <tr>
+                <td class="first">Email</td>
+                <td>|</td>
+                <td>{{ request.user.email }}</td>
+            </tr>
+            <tr>
+                <td class="first">First Name</td>
+                <td>|</td>
+                <td>{{ request.user.first_name }}</td>
+            </tr>
+            <tr>
+                <td class="first">Last Name</td>
+                <td>|</td>
+                <td>{{ request.user.last_name }}</td>
+            </tr>
+            <tr>
+                <td class="first">Gender</td>
+                <td>|</td>
+                {% if request.user.gender == 'F' %}
+                    <td>Female</td>
+                {% else %}
+                    <td>Male</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <td class="first">Age</td>
+                <td>|</td>
+                <td>{{ age }}</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}

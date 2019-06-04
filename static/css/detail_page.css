@@ -25,7 +25,7 @@
   color: white;
   position: relative; }
 
-.text-with-background h1, h5 {
+.text-with-background h1, .text-with-background h5 {
   margin: 0 !important;
   padding: 10px;
   text-align: center; }

@@ -78,8 +78,12 @@ WSGI_APPLICATION = 'itechart_project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DATABASE'),
+        'USER': os.getenv('DATABASE'),
+        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
+        'HOST': os.getenv('DATABASE_HOST'),
+        'PORT': os.getenv('DATABASE_PORT')
     }
 }
 
@@ -129,7 +133,13 @@ DATE_INPUT_FORMATS = ['%d.%m.%Y']
 
 LOGIN_URL = reverse_lazy('main_app:register_page')
 LOGIN_REDIRECT_URL = reverse_lazy('main_app:main_page')
-LOGOUT_REDIRECT_URL = reverse_lazy('main_app:register_page')
+LOGOUT_REDIRECT_URL = reverse_lazy('main_app:login_page')
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.getenv('EMAIL_SENDER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_SENDER_PASSWORD')
+EMAIL_PORT = 587
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')

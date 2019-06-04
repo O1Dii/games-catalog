@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link type="text/css" rel="stylesheet" href="{% static 'css/send_email.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id="main-container" class="d-flex flex-column justify-content-center">
+    {% if DoesNotExist %}
+        <h3>Неверный токен или id</h3>
+    {% else %}
+        <h3>Вам на почту отправлено письмо с ссылкой для подтвержения email</h3>
+        <h5>Если письмо не пришло, нажмите на кнопку для повторной отправки</h5>
+        <a href="?"><button id="send-again-btn" type="button">Повторная отправка</button></a>
+    {% endif %}
+    </div>
+{% endblock %}
