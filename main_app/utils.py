@@ -1,6 +1,7 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+from django.urls.converters import StringConverter
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 
@@ -20,3 +21,7 @@ def send_email(request, user):
         to=[user.email]
     )
     email.send()
+
+
+class TokenConverter(StringConverter):
+    regex = '[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20}'
