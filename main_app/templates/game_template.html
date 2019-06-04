@@ -1,16 +1,18 @@
-{% load static %}
-<div id="main-game-container">
-    <img id="image-cover" src="{{ game.cover }}" alt="">
-    <div id="cover-container">
-        <div id="background-container"></div>
-        <div id="background-dark">
-            <h3 id="game_name">{{ game.name }}</h3>
-            <h5 id="game_version_title">{{ game.version_title }}</h5>
-            <div id="buttons-open-must-container" class="d-flex flex-nowrap flex-row">
+<div class="main-game-container">
+    <img class="image-cover" src="{{ game.cover }}" alt="">
+    <div class="cover-container">
+        <div class="background-container"></div>
+        <div class="background-dark">
+            <h3 class="game_name">{{ game.name }}</h3>
+            <h5 class="game_version_title">{{ game.version_title }}</h5>
+            <div class="buttons-open-must-container d-flex flex-nowrap flex-row">
                 <a href="{% url 'main_app:detail_page' game_id=game.id %}">
                     <button type="button" class="cover-button">Open</button>
                 </a>
-                <button class="cover-button">MUST</button>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="cover-button">MUST</button>
+                </form>
             </div>
         </div>
     </div>

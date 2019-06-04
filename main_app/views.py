@@ -3,6 +3,7 @@ from datetime import datetime
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.encoding import force_text
@@ -15,7 +16,7 @@ from main_app.utils import send_email
 from .igdb_api import IGDB
 from .twitter_api import Twitter
 from .tokens import account_activation_token
-from .models import UserModel
+from .models import UserModel, MustModel
 
 
 class SendEmail(TemplateView):
@@ -69,6 +70,13 @@ class MainPageView(LoginRequiredMixin, TemplateView):
             'end': end
         })
         return context
+
+    def post(self, request):
+        game_id = request.POST.get('must_game_id')
+        if game_id and isinstance(game_id, int):
+            MustModel.objects.create(game_id=game_id, user=request.user)
+        print(MustModel.objects.all())
+        return HttpResponse('')
 
 
 class DetailPageView(LoginRequiredMixin, TemplateView):
@@ -142,4 +150,12 @@ class UserPageView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['age'] = round((datetime.date(datetime.now()) - self.request.user.birthday).days / 365.25)
+        return context
+
+
+class MustPageView(TemplateView):
+    template_name = 'must_page.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         return context

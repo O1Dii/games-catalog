@@ -164,22 +164,22 @@ section.range-slider input::-moz-range-thumb {
   -moz-appearance: none;
   width: 9px; }
 
-#main-game-container {
+.main-game-container {
   position: relative;
   height: 30em;
   width: 20em; }
 
-#image-cover {
+.image-cover {
   height: 100%;
   width: 100%; }
 
-#cover-container {
+.cover-container {
   height: 100%;
   width: 100%;
   position: relative;
   top: -100%; }
 
-#background-container {
+.background-container {
   top: 60%;
   position: relative;
   width: 100%;
@@ -187,13 +187,13 @@ section.range-slider input::-moz-range-thumb {
   background-color: black;
   opacity: 0.5; }
 
-#background-dark {
+.background-dark {
   position: relative;
   top: 20%;
   height: 40%;
   margin-left: 10px; }
 
-#buttons-open-must-container {
+.buttons-open-must-container {
   position: absolute;
   bottom: 0; }
 

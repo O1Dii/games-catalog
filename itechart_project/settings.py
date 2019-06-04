@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'itechart_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE'),
-        'USER': os.getenv('DATABASE'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT')
+        'NAME': 'itechart_project',
+        'USER': 'itechart_project',
+        'PASSWORD': '123456',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
 

@@ -46,3 +46,11 @@ class UserModel(PermissionsMixin, AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+
+class MustModel(models.Model):
+    game_id = models.IntegerField()
+    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} {self.game_id}"
