@@ -1,5 +1,11 @@
 #main-container {
   padding: 1%; }
 
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
 .first {
   text-align: end; }

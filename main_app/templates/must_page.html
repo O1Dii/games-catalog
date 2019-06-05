@@ -7,12 +7,17 @@
 {% endblock %}
 
 {% block body %}
-    <div class="main-container">
+    <div id="main-container">
         <h1>My MUST</h1>
-        <div id="games-list-container" class="d-flex flex-wrap">
-            {% for game in games %}
-                {% include 'game_must_template.html' %}
-            {% endfor %}
+        <div id="games-list-container" class="d-flex flex-wrap justify-content-center">
+            {% if games %}
+                {% for game in games %}
+                    {% include 'game_must_template.html' %}
+                {% endfor %}
+            {% else %}
+                <h1>You don't have MUST games yet</h1>
+                <button class="big-red-button">Get MUST games!</button>
+            {% endif %}
         </div>
     </div>
     <div class="row d-flex justify-content-center">

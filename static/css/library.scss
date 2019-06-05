@@ -1,3 +1,14 @@
 $primary-color: red;
 $secondary-color: white;
 $black-color: black;
+
+#main-container{
+  padding: 1%;
+}
+
+.big-red-button{
+    background-color: $primary-color;
+    color: $secondary-color;
+    border-color: $primary-color;
+    border-style: solid;
+}

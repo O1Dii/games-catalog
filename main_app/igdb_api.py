@@ -93,7 +93,7 @@ class IGDB:
         """returns total amount of pages for last game list"""
         return math.ceil(self.__last_headers_x_count / self.__limit)
 
-    def api_get_games_list(self, page: str = '1', **kwargs) -> list:
+    def api_get_games_list(self, page: str = '1', game_ids: list = None, genres: bool = False, **kwargs) -> list:
         """kwargs:
         search: str = None,
         genres: str = None,
@@ -101,21 +101,36 @@ class IGDB:
         user_ratings: tuple = None"""
         category = 'games/?'
         additional = {
-            'fields': 'name,cover,version_title,rating',
+            'fields': 'name,cover,version_title,rating,genres',
             'limit': self.__limit,
-            'offset': (int(page) - 1) * self.__limit}
-        if not kwargs.get('search'):
-            additional['order'] = 'popularity:desc'
-        filters = self.__generate_filters(**kwargs)
-        additional.update(filters)
+            'offset': (int(page) - 1) * self.__limit
+        }
+        if game_ids:
+            games = ','.join(map(str, game_ids))
+            category = f'games/{games}?'
+        else:
+            if not kwargs.get('search'):
+                additional['order'] = 'popularity:desc'
+            filters = self.__generate_filters(**kwargs)
+            additional.update(filters)
         encoded_url = urlencode(additional, quote_via=quote_plus)
         data = self.__api_get(f'{category}{encoded_url}')
         images_query = list(set(each.get('cover', '') for each in data if each.get('cover')))
         images = dict(self.api_get_image(images_query, True))
+        genres_list = []
         for i, each in enumerate(data):
             if each:
                 if each.get('cover'):
                     data[i]['cover'] = images.get(each.get('cover'))
+                if genres:
+                    genres_list.append(data[i].get('genres', [])[0])
+        if genres:
+            j = 0
+            genre_names = self.api_get_names('genres', genres_list)
+            for i, each in enumerate(data):
+                if each.get('genres'):
+                    data[i]['genres'] = genre_names[j]
+                    j += 1
         return data
 
     def api_get_image(self, images_id: list, cover=False):
@@ -123,4 +138,4 @@ class IGDB:
         data = self.__api_get(result + ','.join(map(str, images_id)) + '?fields=url')
         for each in data:
             yield each.get('id'), 'https:' + each.get('url', '').replace('t_thumb', 't_cover_big' if cover
-                                                         else 't_screenshot_med')
+                                                                         else 't_screenshot_med')

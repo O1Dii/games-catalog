@@ -1,3 +1,12 @@
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
 html, body {
   height: 100%; }
 

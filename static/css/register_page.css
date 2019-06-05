@@ -1,3 +1,12 @@
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
 input {
   border: none;
   border-bottom: 2px solid black;
@@ -12,10 +21,6 @@ select {
   background-color: transparent; }
 
 #submit-btn {
-  background-color: red;
-  color: white;
-  border-color: red;
-  border-style: solid;
   width: 40%;
   height: 40px;
   align-self: center; }

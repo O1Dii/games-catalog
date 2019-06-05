@@ -1,17 +1,17 @@
 <div class="main-game-container">
     <img class="image-cover" src="{{ game.cover }}" alt="">
     <div class="lower-container">
-        <div class="row">
-            <div class="col">
+        <div class="lower-inner-container">
+            <div>
                 <h4 class="game_name">{{ game.name }}</h4>
-                <p class="game_version_title">{{ game.genre }}</p>
+                <p class="game_version_title">{{ game.genres }}</p>
             </div>
-            <div class="col">
-                <button class="must-button">UnMUST</button>
+            <div>
+                <button class="big-red-button must-button">UnMUST</button>
             </div>
         </div>
-        <div class="row">
-            <p>Users added: 25</p>
+        <div>
+            <p>Users added: {{ game.added }}</p>
         </div>
     </div>
 </div>

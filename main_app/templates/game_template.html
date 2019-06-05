@@ -9,10 +9,8 @@
                 <a href="{% url 'main_app:detail_page' game_id=game.id %}">
                     <button type="button" class="cover-button">Open</button>
                 </a>
-                <form method="post">
-                    {% csrf_token %}
-                    <button type="submit" class="cover-button">MUST</button>
-                </form>
+                {% csrf_token %}
+                <button type="button" class="cover-button" onclick="send_ajax_must({{ game.id }})">MUST</button>
             </div>
         </div>
     </div>
