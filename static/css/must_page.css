@@ -1,3 +1,4 @@
+@import url(main_page.css);
 #main-container {
   padding: 1%; }
 
@@ -16,6 +17,7 @@
   height: 80%; }
 
 .lower-container {
+  height: 20%;
   padding: 5%;
   border: solid 1px grey; }
 
@@ -29,3 +31,6 @@
 
 .lower-inner-container h4, .lower-container p {
   margin-bottom: 0; }
+
+.lower-inner-container h4 {
+  height: 30px; }

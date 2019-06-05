@@ -123,7 +123,7 @@ class IGDB:
                 if each.get('cover'):
                     data[i]['cover'] = images.get(each.get('cover'))
                 if genres:
-                    genres_list.append(data[i].get('genres', [])[0])
+                    genres_list.append(data[i].get('genres', [0])[0])
         if genres:
             j = 0
             genre_names = self.api_get_names('genres', genres_list)

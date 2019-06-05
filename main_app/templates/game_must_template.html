@@ -7,7 +7,9 @@
                 <p class="game_version_title">{{ game.genres }}</p>
             </div>
             <div>
-                <button class="big-red-button must-button">UnMUST</button>
+                {% csrf_token %}
+                <button class="big-red-button must-button" type="button"
+                        onclick="send_ajax_must('/must/{{ game.id }}', {{ game.id }})">UnMUST</button>
             </div>
         </div>
         <div>

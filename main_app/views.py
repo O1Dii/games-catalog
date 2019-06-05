@@ -155,6 +155,13 @@ class UserPageView(LoginRequiredMixin, TemplateView):
 class MustPageView(LoginRequiredMixin, TemplateView):
     template_name = 'must_page.html'
 
+    def post(self, request, **kwargs):
+        game_id = int(request.POST.get('game_id', 0))
+        if game_id:
+            must = MustModel.objects.get(game_id=game_id, user=request.user)
+            must.delete()
+        return HttpResponse('')
+
     def get_context_data(self, user_id, **kwargs):
         context = super().get_context_data(**kwargs)
         game_ids = [each.game_id for each in MustModel.objects.filter(user_id=user_id)]
@@ -164,3 +171,4 @@ class MustPageView(LoginRequiredMixin, TemplateView):
             games[i]['added'] = MustModel.objects.filter(game_id=each['id']).count()
         context['games'] = games
         return context
+

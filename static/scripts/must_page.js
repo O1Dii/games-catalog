@@ -1,8 +1,8 @@
-function send_ajax_must(val){
+function send_ajax_must(url, val){
     console.log(val);
     $.ajax({
         type: 'POST',
-        url:'/',
+        url:url,
         data:{
             game_id:val,
             csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val()

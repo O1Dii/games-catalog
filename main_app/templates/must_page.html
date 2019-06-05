@@ -73,4 +73,9 @@
             {% endif %}
         </div>
     </div>
+
+    <script src="{% static 'scripts/fittext.js' %}"></script>
+    <script type="text/javascript">
+        fitText(document.getElementsByClassName('game_name'))
+    </script>
 {% endblock %}
