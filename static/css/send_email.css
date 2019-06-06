@@ -7,6 +7,13 @@
   border-color: red;
   border-style: solid; }
 
+.center-text {
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
 #main-container {
   padding: 1%;
   justify-content: center; }

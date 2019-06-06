@@ -8,6 +8,13 @@
   border-color: red;
   border-style: solid; }
 
+.center-text {
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
 .main-game-container {
   height: 30em;
   width: 20em; }
@@ -34,3 +41,13 @@
 
 .lower-inner-container h4 {
   height: 30px; }
+
+.game_name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%; }
+
+.important-button {
+  width: 40%;
+  height: 40px;
+  align-self: center; }

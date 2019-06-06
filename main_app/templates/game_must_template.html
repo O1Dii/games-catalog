@@ -9,7 +9,7 @@
             <div>
                 {% csrf_token %}
                 <button class="big-red-button must-button" type="button"
-                        onclick="send_ajax_must('/must/{{ game.id }}', {{ game.id }})">UnMUST</button>
+                        onclick="send_ajax_must('/add_remove_must', {{ game.id }}, '');hideDiv(this);">UnMUST</button>
             </div>
         </div>
         <div>

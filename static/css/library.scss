@@ -7,8 +7,17 @@ $black-color: black;
 }
 
 .big-red-button{
-    background-color: $primary-color;
-    color: $secondary-color;
-    border-color: $primary-color;
-    border-style: solid;
+  background-color: $primary-color;
+  color: $secondary-color;
+  border-color: $primary-color;
+  border-style: solid;
+}
+
+.center-text{
+  text-align: center;
+}
+
+.center-content{
+  display: flex;
+  justify-content: center;
 }

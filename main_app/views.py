@@ -46,12 +46,6 @@ class SendEmail(TemplateView):
 class MainPageView(LoginRequiredMixin, TemplateView):
     template_name = 'main_page.html'
 
-    def post(self, request):
-        game_id = int(request.POST.get('game_id', 0))
-        if game_id:
-            MustModel.objects.get_or_create(game_id=game_id, user=request.user)
-        return HttpResponse('')
-
     def get_context_data(self, **kwargs):
         client = IGDB(6)
         context = super().get_context_data(**kwargs)
@@ -155,20 +149,33 @@ class UserPageView(LoginRequiredMixin, TemplateView):
 class MustPageView(LoginRequiredMixin, TemplateView):
     template_name = 'must_page.html'
 
-    def post(self, request, **kwargs):
-        game_id = int(request.POST.get('game_id', 0))
-        if game_id:
-            must = MustModel.objects.get(game_id=game_id, user=request.user)
-            must.delete()
-        return HttpResponse('')
-
     def get_context_data(self, user_id, **kwargs):
         context = super().get_context_data(**kwargs)
-        game_ids = [each.game_id for each in MustModel.objects.filter(user_id=user_id)]
-        client = IGDB(6)
-        games = client.api_get_games_list('1', game_ids, True)
-        for i, each in enumerate(games):
-            games[i]['added'] = MustModel.objects.filter(game_id=each['id']).count()
-        context['games'] = games
+        game_ids = [each.game_id for each in MustModel.objects.filter(user_id=user_id, active=True)]
+        if game_ids:
+            client = IGDB(6)
+            games = client.api_get_games_list('1', game_ids, True)
+            for i, each in enumerate(games):
+                games[i]['added'] = MustModel.objects.filter(game_id=each['id'], active=True).count()
+            context['games'] = games
         return context
+
+
+class AddRemoveMustView(View):
+    def post(self, request):
+        game_id = int(request.POST.get('game_id', 0))
+        add = request.POST.get('add')
+        if game_id:
+            if add:
+                must = MustModel.objects.get_or_create(game_id=game_id, user=request.user)
+                print(must)
+                print(must[0])
+                print(must[0].active)
+                must[0].active = True
+                must[0].save()
+            else:
+                must = MustModel.objects.get(game_id=game_id, user=request.user)
+                must.active = False
+                must.save()
+        return HttpResponse('')
 

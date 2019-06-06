@@ -9,16 +9,18 @@
 {% block body %}
     <div id="main-container">
         <h1>My MUST</h1>
-        <div id="games-list-container" class="d-flex flex-wrap justify-content-center">
-            {% if games %}
-                {% for game in games %}
-                    {% include 'game_must_template.html' %}
-                {% endfor %}
-            {% else %}
-                <h1>You don't have MUST games yet</h1>
-                <button class="big-red-button">Get MUST games!</button>
-            {% endif %}
-        </div>
+        {% if games %}
+            <div id="games-list-container" class="d-flex flex-wrap justify-content-center">
+            {% for game in games %}
+                {% include 'game_must_template.html' %}
+            {% endfor %}
+            </div>
+        {% else %}
+            <div id="games-list-container" class="d-flex flex-column justify-content-center">
+            <h1 class="center-text">You don't have MUST games yet</h1>
+            <a href="{% url 'main_app:main_page' %}" class="center-content"><button class="big-red-button important-button">Get MUST games!</button></a>
+            </div>
+        {% endif %}
     </div>
     <div class="row d-flex justify-content-center">
         <div class="row pages-container d-flex flex-wrap justify-content-center">
@@ -73,9 +75,4 @@
             {% endif %}
         </div>
     </div>
-
-    <script src="{% static 'scripts/fittext.js' %}"></script>
-    <script type="text/javascript">
-        fitText(document.getElementsByClassName('game_name'))
-    </script>
 {% endblock %}
