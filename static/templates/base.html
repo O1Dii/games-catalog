@@ -34,7 +34,7 @@
             </a>
         {% else %}
             <p>Hello</p><a href="{% url 'main_app:user_page' %}"><ins>{{ request.user.username }}!</ins></a>
-            <a href="{% url 'main_app:must_page' user_id=request.user.id %}">
+            <a href="{% url 'main_app:must_page' %}">
                 <button class="nav-button green-button">My MUSTs</button>
             </a>
             <a href="{% url 'main_app:logout' %}">

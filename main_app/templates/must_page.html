@@ -15,64 +15,37 @@
                 {% include 'game_must_template.html' %}
             {% endfor %}
             </div>
-        {% else %}
+        {% elif request.GET.page == '1' %}
             <div id="games-list-container" class="d-flex flex-column justify-content-center">
             <h1 class="center-text">You don't have MUST games yet</h1>
             <a href="{% url 'main_app:main_page' %}" class="center-content"><button class="big-red-button important-button">Get MUST games!</button></a>
             </div>
+        {% else %}
+            <div id="games-list-container" class="d-flex flex-column justify-content-center">
+            <h1 class="center-text">Nothing here</h1>
+            <a href="{% url 'main_app:must_page' %}" class="center-content"><button class="big-red-button important-button">Go back</button></a>
+            </div>
         {% endif %}
     </div>
-    <div class="row d-flex justify-content-center">
-        <div class="row pages-container d-flex flex-wrap justify-content-center">
-            {% if games %}
-                {% if left_pages %}
-                    {% if left_pages.0 > '1' %}
-                        {% with page='1' %}
-                            <div class="each-page-container align-self-end">
-                                <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                    {{ page }}
-                                </button>
-                            </div>
-                        {% endwith %}
-                        <div class="align-self-end">
-                            <p>...</p>
-                        </div>
-                    {% endif %}
-                    {% for page in left_pages %}
-                        <div class="each-page-container align-self-end">
-                            <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                {{ page }}
-                            </button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                <div class="each-page-container align-self-start">
-                    <button type="submit" name="page" value="{{ current_page }}" class="pages-button">
-                        {{ current_page }}
-                    </button>
-                </div>
-                {% if right_pages %}
-                    {% for page in right_pages %}
-                        <div class="each-page-container align-self-end">
-                            <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                {{ page }}
-                            </button>
-                        </div>
-                    {% endfor %}
-                    {% if pages_amount > end %}
-                        <div class="align-self-end">
-                            <p>...</p>
-                        </div>
-                        {% with page=pages_amount %}
-                            <div class="each-page-container align-self-end">
-                                <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                    {{ page }}
-                                </button>
-                            </div>
-                        {% endwith %}
-                    {% endif %}
-                {% endif %}
+    {% if pages.has_other_pages %}
+        <ul class="pagination">
+            {% if pages.has_previous %}
+                <li><a href="?page={{ pages.previous_page_number }}">&laquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&laquo;</span></li>
             {% endif %}
-        </div>
-    </div>
+            {% for i in pages.paginator.page_range %}
+                {% if users.number == i %}
+                    <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                {% else %}
+                    <li><a href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if pages.has_next %}
+                <li><a href="?page={{ pages.next_page_number }}">&raquo;</a></li>
+            {% else %}
+                <li class="disabled"><span>&raquo;</span></li>
+            {% endif %}
+        </ul>
+    {% endif %}
 {% endblock %}

@@ -3,13 +3,14 @@ from datetime import datetime
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView
 
 from main_app.forms import UserCreationForm
 from main_app.utils import send_email
@@ -146,17 +147,24 @@ class UserPageView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class MustPageView(LoginRequiredMixin, TemplateView):
+class MustListView(LoginRequiredMixin, TemplateView):
     template_name = 'must_page.html'
 
-    def get_context_data(self, user_id, **kwargs):
+    # def get_queryset(self):
+    #     user_id = self.kwargs.get('user_id')
+    #
+    #     if not queryset:
+    #         queryset = []
+    #     return queryset
+
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        game_ids = [each.game_id for each in MustModel.objects.filter(user_id=user_id, active=True)]
+        game_ids = [each.game_id for each in MustModel.objects.filter(user=self.request.user, is_deleted=False)]
         if game_ids:
-            client = IGDB(6)
-            games = client.api_get_games_list('1', game_ids, True)
+            client = IGDB(10)
+            games = client.api_get_games_list('1', game_ids[:10], True)
             for i, each in enumerate(games):
-                games[i]['added'] = MustModel.objects.filter(game_id=each['id'], active=True).count()
+                games[i]['added'] = MustModel.objects.filter(game_id=each['id'], is_deleted=False).count()
             context['games'] = games
         return context
 
@@ -168,14 +176,11 @@ class AddRemoveMustView(View):
         if game_id:
             if add:
                 must = MustModel.objects.get_or_create(game_id=game_id, user=request.user)
-                print(must)
-                print(must[0])
-                print(must[0].active)
-                must[0].active = True
+                must[0].is_deleted = False
                 must[0].save()
             else:
                 must = MustModel.objects.get(game_id=game_id, user=request.user)
-                must.active = False
+                must.is_deleted = True
                 must.save()
         return HttpResponse('')
 

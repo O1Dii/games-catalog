@@ -40,9 +40,9 @@ class IGDB:
         data = self.__api_get(f'{category}{encoded_url}')
         for i, each in enumerate(data):
             if each.get('platforms'):
-                data[i]['platforms'] = self.api_get_names('platforms', each.get('platforms'))
+                data[i]['platforms'] = self.api_get_names('platforms', each.get('platforms')).values()
             if each.get('genres'):
-                data[i]['genres'] = self.api_get_names('genres', each.get('genres'))
+                data[i]['genres'] = self.api_get_names('genres', each.get('genres')).values()
             if each.get('rating'):
                 data[i]['rating'] = round(each.get('rating') / 10, 2)
             if each.get('aggregated_rating'):
@@ -57,7 +57,7 @@ class IGDB:
         category += '/' + ','.join(map(str, id_list))
         category += '?fields=name'
         data = self.__api_get(category)
-        return [each.get('name') for each in data if each.get('name')]
+        return {each['id']:each['name'] for each in data if each.get('name')}
 
     def api_find(self, category: str, search: str) -> list:
         category += '/?'
@@ -127,9 +127,10 @@ class IGDB:
         if genres:
             j = 0
             genre_names = self.api_get_names('genres', genres_list)
+            print(genre_names)
             for i, each in enumerate(data):
                 if each.get('genres'):
-                    data[i]['genres'] = genre_names[j]
+                    data[i]['genres'] = genre_names[each.get('genres')[0]]
                     j += 1
         return data
 
