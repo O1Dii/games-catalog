@@ -57,7 +57,7 @@ class IGDB:
         category += '/' + ','.join(map(str, id_list))
         category += '?fields=name'
         data = self.__api_get(category)
-        return {each['id']:each['name'] for each in data if each.get('name')}
+        return {each['id']: each['name'] for each in data if each.get('name')}
 
     def api_find(self, category: str, search: str) -> list:
         category += '/?'
@@ -92,6 +92,16 @@ class IGDB:
     def api_get_last_pages_amount(self) -> int:
         """returns total amount of pages for last game list"""
         return math.ceil(self.__last_headers_x_count / self.__limit)
+
+    def api_get_all(self, category='games'):
+        """return all items from the chosen category"""
+        category += '/?fields=*&limit=50'
+        result = []
+        for i in range(100):
+            query = category + '&offset=' + str(i)
+            i += 50
+            result.append(self.__api_get(query))
+        return result
 
     def api_get_games_list(self, page: str = '1', game_ids: list = None, genres: bool = False, **kwargs) -> list:
         """kwargs:

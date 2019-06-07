@@ -76,7 +76,7 @@ class MainPageView(LoginRequiredMixin, TemplateView):
 class DetailPageView(LoginRequiredMixin, TemplateView):
     template_name = 'detail_page.html'
 
-    def get_context_data(self, game_id, **kwargs):
+    def get_context_data(self, game_id=0, **kwargs):
         context = super().get_context_data(**kwargs)
         client = IGDB(6)
         game = client.api_get_game(game_id)[0]
