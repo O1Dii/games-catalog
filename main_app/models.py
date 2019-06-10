@@ -59,14 +59,14 @@ class MustModel(models.Model):
 
 class GameModel(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
-    rating = models.DecimalField(decimal_places=0, max_digits=3)
-    version_title = models.CharField(max_length=50)
-    aggregated_rating = models.DecimalField(decimal_places=0, max_digits=3)
-    summary = models.CharField(max_length=500)
-    first_release_date = models.DateField()
-    rating_count = models.DecimalField(decimal_places=0, max_digits=3)
-    aggregated_rating_count = models.DecimalField(decimal_places=0, max_digits=3)
+    name = models.CharField(max_length=100)
+    rating = models.DecimalField(decimal_places=0, max_digits=3, null=True)
+    version_title = models.CharField(max_length=100, null=True)
+    aggregated_rating = models.DecimalField(decimal_places=0, max_digits=3, null=True)
+    summary = models.CharField(max_length=2500, null=True)
+    first_release_date = models.DateField(null=True)
+    rating_count = models.DecimalField(decimal_places=0, max_digits=3, null=True)
+    aggregated_rating_count = models.DecimalField(decimal_places=0, max_digits=3, null=True)
 
 
 class GenreModel(models.Model):
@@ -79,26 +79,31 @@ class PlatformModel(models.Model):
     name = models.CharField(max_length=50)
 
 
-class ImageModel(models.Model):
+class ScreenshotModel(models.Model):
+    id = models.AutoField(primary_key=True)
+    url = models.URLField()
+
+
+class CoverModel(models.Model):
     id = models.AutoField(primary_key=True)
     url = models.URLField()
 
 
 class GenreGameModel(models.Model):
-    game_id = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    genre_id = models.ForeignKey(GenreModel, on_delete=models.CASCADE)
+    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
+    genre = models.ForeignKey(GenreModel, on_delete=models.CASCADE)
 
 
 class PlatformGameModel(models.Model):
-    game_id = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    platform_id = models.ForeignKey(PlatformModel, on_delete=models.CASCADE)
+    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
+    platform = models.ForeignKey(PlatformModel, on_delete=models.CASCADE)
 
 
 class CoverGameModel(models.Model):
-    game_id = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    cover_id = models.ForeignKey(ImageModel, on_delete=models.CASCADE)
+    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
+    cover = models.ForeignKey(CoverModel, on_delete=models.CASCADE)
 
 
 class ScreenshotGameModel(models.Model):
-    game_id = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    screenshot_id = models.ForeignKey(ImageModel, on_delete=models.CASCADE)
+    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
+    screenshot = models.ForeignKey(ScreenshotModel, on_delete=models.CASCADE)

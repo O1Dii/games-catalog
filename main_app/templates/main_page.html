@@ -41,67 +41,92 @@
                 <input id="main-search" type="text" name="search" placeholder="Search..." value="{{ search }}">
                 <div class="container-fluid d-flex flex-column flex-row" id="games-list">
                     <div class="d-flex flex-wrap flex-row align-content-center justify-content-center">
-                        {% if games %}
-                            {% for game in games %}
+                        {% if object_list %}
+                            {% for game in object_list %}
                                 {% include 'game_template.html' %}
                             {% endfor %}
                         {% else %}
                             <h1>Совпадений не найдено</h1>
                         {% endif %}
                     </div>
-                    <div class="row d-flex justify-content-center">
-                        <div class="row pages-container d-flex flex-wrap justify-content-center">
-                            {% if games %}
-                                {% if left_pages %}
-                                    {% if left_pages.0 > '1' %}
-                                        {% with page='1' %}
-                                            <div class="each-page-container align-self-end">
-                                                <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                                    {{ page }}
-                                                </button>
-                                            </div>
-                                        {% endwith %}
-                                        <div class="align-self-end">
-                                            <p>...</p>
-                                        </div>
-                                    {% endif %}
-                                    {% for page in left_pages %}
-                                        <div class="each-page-container align-self-end">
-                                            <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                                {{ page }}
-                                            </button>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <div class="each-page-container align-self-start">
-                                    <button type="submit" name="page" value="{{ current_page }}" class="pages-button">
-                                        {{ current_page }}
-                                    </button>
-                                </div>
-                                {% if right_pages %}
-                                    {% for page in right_pages %}
-                                        <div class="each-page-container align-self-end">
-                                            <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                                {{ page }}
-                                            </button>
-                                        </div>
-                                    {% endfor %}
-                                    {% if pages_amount > end %}
-                                        <div class="align-self-end">
-                                            <p>...</p>
-                                        </div>
-                                        {% with page=pages_amount %}
-                                            <div class="each-page-container align-self-end">
-                                                <button type="submit" name="page" value="{{ page }}" class="pages-button">
-                                                    {{ page }}
-                                                </button>
-                                            </div>
-                                        {% endwith %}
+                {% if is_paginated %}
+                    <ul class="pages-container">
+                        {% if page_obj.has_previous %}
+                            <li class="each-page-container"><a class="pages-button" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                            <li class="each-page-container disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in paginator.page_range %}
+                            {% if forloop.counter > (page_obj.number - 3) %}
+                                {% if forloop.counter < (page_obj.number + 3) %}
+                                    {% if page_obj.number == i %}
+                                        <li class="each-page-container active"><span class="pages-button chosen-page">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                                        <li class="each-page-container"><a class="pages-button" href="?page={{ i }}">{{ i }}</a></li>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
-                        </div>
-                    </div>
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                            <li class="each-page-container"><a class="pages-button" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                            <li class="each-page-container disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                {% endif %}
+{#                    <div class="row d-flex justify-content-center">#}
+{#                        <div class="row pages-container d-flex flex-wrap justify-content-center">#}
+{#                            {% if games %}#}
+{#                                {% if left_pages %}#}
+{#                                    {% if left_pages.0 > '1' %}#}
+{#                                        {% with page='1' %}#}
+{#                                            <div class="each-page-container align-self-end">#}
+{#                                                <button type="submit" name="page" value="{{ page }}" class="pages-button">#}
+{#                                                    {{ page }}#}
+{#                                                </button>#}
+{#                                            </div>#}
+{#                                        {% endwith %}#}
+{#                                        <div class="align-self-end">#}
+{#                                            <p>...</p>#}
+{#                                        </div>#}
+{#                                    {% endif %}#}
+{#                                    {% for page in left_pages %}#}
+{#                                        <div class="each-page-container align-self-end">#}
+{#                                            <button type="submit" name="page" value="{{ page }}" class="pages-button">#}
+{#                                                {{ page }}#}
+{#                                            </button>#}
+{#                                        </div>#}
+{#                                    {% endfor %}#}
+{#                                {% endif %}#}
+{#                                <div class="each-page-container align-self-start">#}
+{#                                    <button type="submit" name="page" value="{{ current_page }}" class="pages-button">#}
+{#                                        {{ current_page }}#}
+{#                                    </button>#}
+{#                                </div>#}
+{#                                {% if right_pages %}#}
+{#                                    {% for page in right_pages %}#}
+{#                                        <div class="each-page-container align-self-end">#}
+{#                                            <button type="submit" name="page" value="{{ page }}" class="pages-button">#}
+{#                                                {{ page }}#}
+{#                                            </button>#}
+{#                                        </div>#}
+{#                                    {% endfor %}#}
+{#                                    {% if pages_amount > end %}#}
+{#                                        <div class="align-self-end">#}
+{#                                            <p>...</p>#}
+{#                                        </div>#}
+{#                                        {% with page=pages_amount %}#}
+{#                                            <div class="each-page-container align-self-end">#}
+{#                                                <button type="submit" name="page" value="{{ page }}" class="pages-button">#}
+{#                                                    {{ page }}#}
+{#                                                </button>#}
+{#                                            </div>#}
+{#                                        {% endwith %}#}
+{#                                    {% endif %}#}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+{#                        </div>#}
+{#                    </div>#}
                 </div>
             </div>
         </div>

@@ -9,9 +9,9 @@
 {% block body %}
     <div id="main-container">
         <h1>My MUST</h1>
-        {% if games %}
+        {% if object_list %}
             <div id="games-list-container" class="d-flex flex-wrap justify-content-center">
-            {% for game in games %}
+            {% for game in object_list %}
                 {% include 'game_must_template.html' %}
             {% endfor %}
             </div>

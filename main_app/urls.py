@@ -1,4 +1,7 @@
+from django import template
 from django.urls import path, register_converter
+
+from main_app.models import CoverGameModel, GameModel
 from .views import (MainPageView, DetailPageView,
                     RegisterPageView, LoginPageView, LogoutPageView,
                     UserPageView, ActivationView, SendEmail, MustListView,

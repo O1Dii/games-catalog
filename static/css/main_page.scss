@@ -1,4 +1,5 @@
 @import 'library.scss';
+@import 'pagination.scss';
 
 input{
     width: 100%;
@@ -68,20 +69,6 @@ h3, h5 {
 #games-list{
     margin-top: 1%;
     height: 60%;
-}
-.pages-container{
-    margin-top: 10px;
-    height: 50px;
-    width: 40%;
-}
-.pages-button{
-    background-color: $primary-color;
-    color: $secondary-color;
-    border-color: $primary-color;
-    border-style: solid;
-}
-.each-page-container{
-    margin: 5px;
 }
 .my-row{
     height: 40%;

@@ -1,10 +1,13 @@
+{% load cover %}
+{% load genre %}
+{% load added %}
 <div class="main-game-container">
-    <img class="image-cover" src="{{ game.cover }}" alt="">
+    <img class="image-cover" src="{{ game|cover }}" alt="">
     <div class="lower-container">
         <div class="lower-inner-container">
             <div>
                 <h4 class="game_name">{{ game.name }}</h4>
-                <p class="game_version_title">{{ game.genres }}</p>
+                <p class="game_version_title">{{ game|genre }}</p>
             </div>
             <div>
                 {% csrf_token %}
@@ -13,7 +16,7 @@
             </div>
         </div>
         <div>
-            <p>Users added: {{ game.added }}</p>
+            <p>Users added: {{ game|added }}</p>
         </div>
     </div>
 </div>

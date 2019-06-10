@@ -1,0 +1,24 @@
+@import 'library.scss';
+
+.pages-container{
+  list-style-type: none;
+  align-self: center;
+  display: inline-flex;
+  margin-top: 10px;
+  height: 50px;
+  width: 40%;
+}
+.pages-button{
+  background-color: $primary-color;
+  color: $secondary-color;
+  border-color: $primary-color;
+  border-style: solid;
+  margin: 5px;
+  align-self: end;
+}
+.chosen-page{
+  align-self: start;
+}
+.each-page-container{
+  margin: 5px;
+}

@@ -4,6 +4,7 @@ from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.paginator import Paginator
+from django.db.models import F
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
@@ -17,7 +18,8 @@ from main_app.utils import send_email
 from .igdb_api import IGDB
 from .twitter_api import Twitter
 from .tokens import account_activation_token
-from .models import UserModel, MustModel
+from .models import UserModel, MustModel, GameModel, CoverGameModel, ScreenshotGameModel, GenreGameModel, \
+    PlatformGameModel
 
 
 class SendEmail(TemplateView):
@@ -44,31 +46,48 @@ class SendEmail(TemplateView):
         return context
 
 
-class MainPageView(LoginRequiredMixin, TemplateView):
+# class MainPageView(LoginRequiredMixin, TemplateView):
+#     template_name = 'main_page.html'
+#
+#     def get_context_data(self, **kwargs):
+#         client = IGDB(6)
+#         context = super().get_context_data(**kwargs)
+#         current_page = self.request.GET.get('page', 1)
+#         games = client.api_get_games_list(**{key: value for key, value in self.request.GET.items()})
+#         pages_amount = client.api_get_last_pages_amount()
+#         left_pages = list([str(i) for i in range(max(int(current_page) - 3, 1), int(current_page))])
+#         right_pages = list([str(i) for i in range(min(int(current_page) + 1, pages_amount + 1),
+#                                                   min(int(current_page) + 4, pages_amount + 1))])
+#         end = int(right_pages[-1]) if right_pages else pages_amount
+#         context.update({
+#             'games': games,
+#             'search': self.request.GET.get('search', ''),
+#             'platforms': self.request.GET.get('platforms', ''),
+#             'genres': self.request.GET.get('genres', ''),
+#             'ur1': self.request.GET.get('ur1', '0'),
+#             'ur2': self.request.GET.get('ur2', '10'),
+#             'pages_amount': pages_amount,
+#             'current_page': current_page,
+#             'left_pages': left_pages,
+#             'right_pages': right_pages,
+#             'end': end
+#         })
+#         return context
+
+
+class MainPageView(LoginRequiredMixin, ListView):
     template_name = 'main_page.html'
+    queryset = GameModel.objects.all().order_by(F('rating').desc(nulls_last=True))
+    paginate_by = 6
 
     def get_context_data(self, **kwargs):
-        client = IGDB(6)
         context = super().get_context_data(**kwargs)
-        current_page = self.request.GET.get('page', 1)
-        games = client.api_get_games_list(**{key: value for key, value in self.request.GET.items()})
-        pages_amount = client.api_get_last_pages_amount()
-        left_pages = list([str(i) for i in range(max(int(current_page) - 3, 1), int(current_page))])
-        right_pages = list([str(i) for i in range(min(int(current_page) + 1, pages_amount + 1),
-                                                  min(int(current_page) + 4, pages_amount + 1))])
-        end = int(right_pages[-1]) if right_pages else pages_amount
         context.update({
-            'games': games,
             'search': self.request.GET.get('search', ''),
             'platforms': self.request.GET.get('platforms', ''),
             'genres': self.request.GET.get('genres', ''),
             'ur1': self.request.GET.get('ur1', '0'),
             'ur2': self.request.GET.get('ur2', '10'),
-            'pages_amount': pages_amount,
-            'current_page': current_page,
-            'left_pages': left_pages,
-            'right_pages': right_pages,
-            'end': end
         })
         return context
 
@@ -78,22 +97,33 @@ class DetailPageView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, game_id=0, **kwargs):
         context = super().get_context_data(**kwargs)
-        client = IGDB(6)
-        game = client.api_get_game(game_id)[0]
+        game = GameModel.objects.get(id=game_id)
         twitter = Twitter()
-        tweets = list(twitter.get_tweets_via_hashtag(game.get('name')))
+        tweets = list(twitter.get_tweets_via_hashtag(game.name))
+        screenshots = ScreenshotGameModel.objects.filter(game=game)
+        genres = GenreGameModel.objects.filter(game=game)
+        platforms = PlatformGameModel.objects.filter(game=game)
+        date = 'No information'
+        if game.first_release_date:
+            date = game.first_release_date.strftime('%Y %b %d')
+        user_rating = 'No rating'
+        if game.rating:
+            user_rating = round(game.rating / 10, 2)
+        aggregated_rating = 'No rating'
+        if game.aggregated_rating:
+            aggregated_rating = round(game.aggregated_rating / 10, 2)
         context.update({
-            'name': game.get('name', ''),
-            'version_title': game.get('version_title', ''),
-            'description': game.get('summary', ''),
-            'release_date': datetime.utcfromtimestamp(game.get('first_release_date')).strftime('%Y %b %d'),
-            'screenshots': game.get('screenshots'),
-            'user_ratings': game.get('rating', '0'),
-            'critics_ratings': game.get('aggregated_rating', '0'),
-            'genres': game.get('genres'),
-            'platforms': game.get('platforms'),
-            'users_reviews': game.get('rating_count', '0'),
-            'critics_reviews': game.get('aggregated_rating_count', '0'),
+            'name': game.name,
+            'version_title': game.version_title if game.version_title is not None else '',
+            'description': game.summary if game.summary is not None else '',
+            'release_date': date,
+            'screenshots': [i.screenshot.url for i in screenshots],
+            'user_ratings': user_rating,
+            'critics_ratings': aggregated_rating,
+            'genres': [i.genre.name for i in genres],
+            'platforms': [i.platform.name for i in platforms],
+            'users_reviews': game.rating_count if game.rating_count is not None else 0,
+            'critics_reviews': game.aggregated_rating_count if game.aggregated_rating_count is not None else 0,
             'tweets': tweets
         })
         return context
@@ -147,26 +177,16 @@ class UserPageView(LoginRequiredMixin, TemplateView):
         return context
 
 
-class MustListView(LoginRequiredMixin, TemplateView):
+class MustListView(LoginRequiredMixin, ListView):
     template_name = 'must_page.html'
+    paginate_by = 10
 
-    # def get_queryset(self):
-    #     user_id = self.kwargs.get('user_id')
-    #
-    #     if not queryset:
-    #         queryset = []
-    #     return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_queryset(self):
         game_ids = [each.game_id for each in MustModel.objects.filter(user=self.request.user, is_deleted=False)]
         if game_ids:
-            client = IGDB(10)
-            games = client.api_get_games_list('1', game_ids[:10], True)
-            for i, each in enumerate(games):
-                games[i]['added'] = MustModel.objects.filter(game_id=each['id'], is_deleted=False).count()
-            context['games'] = games
-        return context
+            queryset = GameModel.objects.filter(id__in=game_ids)
+            return queryset
+        return []
 
 
 class AddRemoveMustView(View):

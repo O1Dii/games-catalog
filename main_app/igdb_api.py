@@ -14,6 +14,7 @@ class IGDB:
             'user-key': settings.IGDB_API_KEY,
             'Accept': 'application/json'
         }
+        print(self.__headers['user-key'])
         self.__limit = limit
 
     def __api_get(self, additional_string: str = ''):
@@ -48,15 +49,21 @@ class IGDB:
             if each.get('aggregated_rating'):
                 data[i]['aggregated_rating'] = round(each.get('aggregated_rating') / 10, 2)
             if each.get('screenshots'):
-                images = dict(self.api_get_image(each.get('screenshots'), False))
+                images = self.api_get_image(each.get('screenshots'), False)
                 data[i]['screenshots'] = images.values()
-                print(data[i])
         return data
 
     def api_get_names(self, category: str, id_list: list):
-        category += '/' + ','.join(map(str, id_list))
-        category += '?fields=name'
-        data = self.__api_get(category)
+        category += '/'
+        id_list = list(set(id_list))
+        data = []
+        if len(id_list) > 10:
+            for i in range(math.floor(len(id_list) / 10)):
+                data.extend(self.__api_get(category + ','.join(map(str, id_list[i * 10:(i + 1) * 10])) +
+                                           '?fields=name'))
+            data.extend(self.__api_get(category + ','.join(map(str,
+                                                               id_list[math.floor(len(id_list) / 10) * 10:])) +
+                                       '?fields=name'))
         return {each['id']: each['name'] for each in data if each.get('name')}
 
     def api_find(self, category: str, search: str) -> list:
@@ -93,14 +100,30 @@ class IGDB:
         """returns total amount of pages for last game list"""
         return math.ceil(self.__last_headers_x_count / self.__limit)
 
-    def api_get_all(self, category='games'):
-        """return all items from the chosen category"""
-        category += '/?fields=*&limit=50'
+    def api_get_first_games(self, amount: int = 300):
+        """returns the chosen amount of games"""
+        category = 'games'
+        fields = 'name,rating,version_title,aggregated_rating,'\
+                 'screenshots,summary,platforms,genres,first_release_date,'\
+                 'rating_count,aggregated_rating_count,cover'
         result = []
-        for i in range(100):
-            query = category + '&offset=' + str(i)
-            i += 50
-            result.append(self.__api_get(query))
+        if amount > 200:
+            for i in range(4):
+                query = f'{category}/?fields={fields}&limit=50&offset={i * 50}'
+                result.extend(self.__api_get(query))
+            for i in range(round((amount - 200) / 10)):
+                games_list = [i * 10 + j for j in range(10)]
+                print(games_list)
+                query = f'{category}/{games_list}?fields={fields}'
+                result.extend(self.__api_get(query))
+        else:
+            short_val = math.floor(amount / 50)
+            for i in range(short_val):
+                query = f'{category}/?fields={fields}&limit=50&offset={i * 50}'
+                result.extend(self.__api_get(query))
+            if amount - short_val * 50 != 0:
+                query = f'{category}/?fields={fields}&limit={amount - short_val * 50}&offset={short_val * 50}'
+                result.extend(self.__api_get(query))
         return result
 
     def api_get_games_list(self, page: str = '1', game_ids: list = None, genres: bool = False, **kwargs) -> list:
@@ -126,7 +149,7 @@ class IGDB:
         encoded_url = urlencode(additional, quote_via=quote_plus)
         data = self.__api_get(f'{category}{encoded_url}')
         images_query = list(set(each.get('cover', '') for each in data if each.get('cover')))
-        images = dict(self.api_get_image(images_query, True))
+        images = self.api_get_image(images_query, True)
         genres_list = []
         for i, each in enumerate(data):
             if each:
@@ -145,8 +168,14 @@ class IGDB:
         return data
 
     def api_get_image(self, images_id: list, cover=False):
+        images_id = list(set(images_id))
         result = 'covers/' if cover else 'screenshots/'
-        data = self.__api_get(result + ','.join(map(str, images_id)) + '?fields=url')
-        for each in data:
-            yield each.get('id'), 'https:' + each.get('url', '').replace('t_thumb', 't_cover_big' if cover
-                                                                         else 't_screenshot_med')
+        data = []
+        if len(images_id) > 10:
+            for i in range(math.floor(len(images_id) / 10)):
+                data.extend(self.__api_get(result + ','.join(map(str, images_id[i * 10:(i + 1) * 10])) + '?fields=url'))
+            data.extend(self.__api_get(result + ','.join(map(str,
+                                                             images_id[math.floor(len(images_id) / 10) * 10:])) +
+                                       '?fields=url'))
+        return {each.get('id'): 'https:' + each.get('url', '').replace('t_thumb', 't_cover_big' if cover
+                                                                         else 't_screenshot_med') for each in data}

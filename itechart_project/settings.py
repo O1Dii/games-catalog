@@ -145,7 +145,7 @@ STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-IGDB_API_KEY = os.getenv('IGDB_API_KEY')
+IGDB_API_KEY = os.environ.get('IGDB_API_KEY')
 CONSUMER_TOKEN = os.getenv('TWITTER_CONSUMER_TOKEN')
 CONSUMER_TOKEN_SECRET = os.getenv('TWITTER_CONSUMER_TOKEN_SECRET')
 ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
