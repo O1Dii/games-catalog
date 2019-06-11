@@ -15,6 +15,8 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.urls import reverse_lazy
 
+import django_heroku
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -150,3 +152,5 @@ CONSUMER_TOKEN = os.getenv('TWITTER_CONSUMER_TOKEN')
 CONSUMER_TOKEN_SECRET = os.getenv('TWITTER_CONSUMER_TOKEN_SECRET')
 ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
 ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
+
+django_heroku.settings(locals())

@@ -57,8 +57,9 @@
   padding-top: 0; }
 
 .main-game-container {
-  height: 30em;
-  width: 20em; }
+  height: 25em;
+  width: 20em;
+  margin: 1rem; }
 
 .image-cover {
   width: 100%;
@@ -66,7 +67,6 @@
 
 .lower-container {
   height: 20%;
-  padding: 5%;
   border: solid 1px grey; }
 
 .lower-inner-container {
@@ -75,7 +75,9 @@
 
 .must-button {
   height: 100%;
-  width: auto; }
+  width: auto;
+  margin-right: 0.2rem;
+  margin-top: 0.2rem; }
 
 .lower-inner-container h4, .lower-container p {
   margin-bottom: 0; }
