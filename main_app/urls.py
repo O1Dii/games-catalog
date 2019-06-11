@@ -1,7 +1,5 @@
-from django import template
 from django.urls import path, register_converter
 
-from main_app.models import CoverGameModel, GameModel
 from .views import (MainPageView, DetailPageView,
                     RegisterPageView, LoginPageView, LogoutPageView,
                     UserPageView, ActivationView, SendEmail, MustListView,
@@ -14,7 +12,7 @@ register_converter(TokenConverter, 'token')
 
 urlpatterns = [
     path('', MainPageView.as_view(), name='main_page'),
-    path('detail/<int:game_id>', DetailPageView.as_view(), name='detail_page'),
+    path('detail/<int:pk>', DetailPageView.as_view(), name='detail_page'),
     path('registration', RegisterPageView.as_view(), name='register_page'),
     path('logout', LogoutPageView.as_view(), name='logout'),
     path('login', LoginPageView.as_view(), name='login_page'),

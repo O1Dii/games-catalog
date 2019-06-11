@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -48,18 +49,11 @@ class UserModel(PermissionsMixin, AbstractBaseUser):
         return self.email
 
 
-class MustModel(models.Model):
-    game_id = models.IntegerField()
-    user = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    is_deleted = models.BooleanField(default=False)
+class Game(models.Model):
+    class Meta:
+        ordering = ['rating']
 
-    def __str__(self):
-        return f"{self.user.username} {self.game_id}"
-
-
-class GameModel(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=250, unique=True)
     rating = models.DecimalField(decimal_places=0, max_digits=3, null=True)
     version_title = models.CharField(max_length=100, null=True)
     aggregated_rating = models.DecimalField(decimal_places=0, max_digits=3, null=True)
@@ -69,41 +63,30 @@ class GameModel(models.Model):
     aggregated_rating_count = models.DecimalField(decimal_places=0, max_digits=3, null=True)
 
 
-class GenreModel(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
+class Must(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='musts')
+    is_deleted = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.user.name} {self.game.id}"
 
 
-class PlatformModel(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=50)
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    games = models.ManyToManyField(Game, related_name="genres")
 
 
-class ScreenshotModel(models.Model):
-    id = models.AutoField(primary_key=True)
+class Platform(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    games = models.ManyToManyField(Game, related_name="platforms")
+
+
+class Cover(models.Model):
     url = models.URLField()
+    game = models.ForeignKey(Game, related_name="cover", on_delete=models.CASCADE)
 
 
-class CoverModel(models.Model):
-    id = models.AutoField(primary_key=True)
+class Screenshot(models.Model):
     url = models.URLField()
-
-
-class GenreGameModel(models.Model):
-    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    genre = models.ForeignKey(GenreModel, on_delete=models.CASCADE)
-
-
-class PlatformGameModel(models.Model):
-    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    platform = models.ForeignKey(PlatformModel, on_delete=models.CASCADE)
-
-
-class CoverGameModel(models.Model):
-    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    cover = models.ForeignKey(CoverModel, on_delete=models.CASCADE)
-
-
-class ScreenshotGameModel(models.Model):
-    game = models.ForeignKey(GameModel, on_delete=models.CASCADE)
-    screenshot = models.ForeignKey(ScreenshotModel, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, related_name="screenshots", on_delete=models.CASCADE)

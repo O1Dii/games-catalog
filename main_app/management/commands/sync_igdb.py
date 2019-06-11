@@ -3,9 +3,7 @@ from datetime import datetime
 from django.core.management import BaseCommand
 
 from main_app.igdb_api import IGDB
-from main_app.models import (GameModel, GenreModel, PlatformModel,
-                             GenreGameModel, PlatformGameModel, CoverGameModel, ScreenshotGameModel,
-                             CoverModel, ScreenshotModel)
+from main_app.models import (Game, Genre, Platform, Cover, Screenshot)
 
 
 class Command(BaseCommand):
@@ -36,35 +34,35 @@ class Command(BaseCommand):
             if game.get('first_release_date'):
                 game['first_release_date'] = datetime.utcfromtimestamp(game['first_release_date']).strftime('%Y-%m-%d')
             if game.get('status') not in [500, 404, 401, 403]:
-                GameModel.objects.update_or_create(id=game['id'], defaults=game)
+                Game.objects.update_or_create(id=game['id'], defaults=game)
 
         genre_list = client.api_get_names('genres', [j for i in genres.values() for j in i])
         for genre in genre_list.items():
-            GenreModel.objects.update_or_create(id=genre[0], defaults={'name': genre[1]})
+            Genre.objects.update_or_create(id=genre[0], defaults={'name': genre[1]})
         for game_genre in genres.items():
             for genre in game_genre[1]:
-                GenreGameModel.objects.get_or_create(game=GameModel.objects.get(id=game_genre[0]),
-                                                     genre=GenreModel.objects.get(id=genre))
+                temp_genre = Genre.objects.get(id=genre)
+                temp_genre.games.add(Game.objects.get(id=game_genre[0]))
 
         platforms_list = client.api_get_names('platforms', [j for i in platforms.values() for j in i])
         for platform in platforms_list.items():
-            PlatformModel.objects.update_or_create(id=platform[0], defaults={'name': platform[1]})
+            Platform.objects.update_or_create(id=platform[0], defaults={'name': platform[1]})
         for game_platform in platforms.items():
             for platform in game_platform[1]:
-                PlatformGameModel.objects.get_or_create(game=GameModel.objects.get(id=game_platform[0]),
-                                                        platform=PlatformModel.objects.get(id=platform))
+                temp_platform = Platform.objects.get(id=platform)
+                temp_platform.games.add(Game.objects.get(id=game_platform[0]))
 
         covers_list = client.api_get_image(list(covers.values()), True)
-        for cover in covers_list.items():
-            CoverModel.objects.get_or_create(id=cover[0], url=cover[1])
+        # for cover in covers_list.items():
+        #     Cover.objects.get_or_create(id=cover[0], url=cover[1])
         for game_cover in covers.items():
-            CoverGameModel.objects.get_or_create(game=GameModel.objects.get(id=game_cover[0]),
-                                                 cover=CoverModel.objects.get(id=game_cover[1]))
+            Cover.objects.get_or_create(game=Game.objects.get(id=game_cover[0]),
+                                        url=covers_list[game_cover[1]])
 
         screenshots_list = client.api_get_image([j for i in screenshots.values() for j in i])
-        for screenshot in screenshots_list.items():
-            ScreenshotModel.objects.get_or_create(id=screenshot[0], url=screenshot[1])
+        # for screenshot in screenshots_list.items():
+        #     Screenshot.objects.get_or_create(id=screenshot[0], url=screenshot[1])
         for game_screenshot in screenshots.items():
             for screenshot in game_screenshot[1]:
-                ScreenshotGameModel.objects.get_or_create(game=GameModel.objects.get(id=game_screenshot[0]),
-                                                          screenshot=ScreenshotModel.objects.get(id=screenshot))
+                Screenshot.objects.get_or_create(game=Game.objects.get(id=game_screenshot[0]),
+                                                 url=screenshots_list[screenshot])

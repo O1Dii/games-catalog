@@ -14,7 +14,6 @@ class IGDB:
             'user-key': settings.IGDB_API_KEY,
             'Accept': 'application/json'
         }
-        print(self.__headers['user-key'])
         self.__limit = limit
 
     def __api_get(self, additional_string: str = ''):
@@ -113,7 +112,6 @@ class IGDB:
                 result.extend(self.__api_get(query))
             for i in range(round((amount - 200) / 10)):
                 games_list = [i * 10 + j for j in range(10)]
-                print(games_list)
                 query = f'{category}/{games_list}?fields={fields}'
                 result.extend(self.__api_get(query))
         else:
@@ -160,22 +158,29 @@ class IGDB:
         if genres:
             j = 0
             genre_names = self.api_get_names('genres', genres_list)
-            print(genre_names)
             for i, each in enumerate(data):
                 if each.get('genres'):
-                    data[i]['genres'] = genre_names[each.get('genres')[0]]
+                    data[i]['genres'] = genre_names[each.get['genres'][0]]
                     j += 1
         return data
 
     def api_get_image(self, images_id: list, cover=False):
         images_id = list(set(images_id))
-        result = 'covers/' if cover else 'screenshots/'
+        query = 'covers/' if cover else 'screenshots/'
         data = []
         if len(images_id) > 10:
             for i in range(math.floor(len(images_id) / 10)):
-                data.extend(self.__api_get(result + ','.join(map(str, images_id[i * 10:(i + 1) * 10])) + '?fields=url'))
-            data.extend(self.__api_get(result + ','.join(map(str,
-                                                             images_id[math.floor(len(images_id) / 10) * 10:])) +
+                data.extend(self.__api_get(query +
+                                           ','.join(map(str, images_id[i * 10:(i + 1) * 10])) +
+                                           '?fields=url'))
+            data.extend(self.__api_get(query +
+                                       ','.join(map(str, images_id[math.floor(len(images_id) / 10) * 10:])) +
                                        '?fields=url'))
-        return {each.get('id'): 'https:' + each.get('url', '').replace('t_thumb', 't_cover_big' if cover
-                                                                         else 't_screenshot_med') for each in data}
+        result = {}
+        for each in data:
+            if cover:
+                replaced_url = each['url'].replace('t_thumb', 't_cover_big')
+            else:
+                replaced_url = each['url'].replace('t_thumb', 't_screenshot_med')
+            result[each['id']] = f'https:{replaced_url}'
+        return result
