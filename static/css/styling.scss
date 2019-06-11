@@ -29,9 +29,9 @@ html, body{
     border-style: solid;
 }
 .green-button{
-    background-color: green;
+    background-color: $green-color;
     color: $secondary-color;
-    border-color: green;
+    border-color: $green-color;
     margin-right: 0;
 }
 .nav p, .nav ins{

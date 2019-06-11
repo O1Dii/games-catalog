@@ -51,27 +51,17 @@
                     </div>
                 {% if is_paginated %}
                     <ul class="pages-container">
-                        {% if page_obj.has_previous %}
-                            <li class="each-page-container"><a class="pages-button" href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
-                        {% else %}
-                            <li class="each-page-container disabled"><span>&laquo;</span></li>
-                        {% endif %}
                         {% for i in paginator.page_range %}
-                            {% if forloop.counter > (page_obj.number - 3) %}
-                                {% if forloop.counter < (page_obj.number + 3) %}
+                            {% if forloop.counter > page_obj.number|add:"-3" %}
+                                {% if forloop.counter < page_obj.number|add:"3" %}
                                     {% if page_obj.number == i %}
-                                        <li class="each-page-container active"><span class="pages-button chosen-page">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                        <li class="each-page-container chosen-page"><span class="pages-button">{{ i }} <span class="sr-only">(current)</span></span></li>
                                     {% else %}
                                         <li class="each-page-container"><a class="pages-button" href="?page={{ i }}">{{ i }}</a></li>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
                         {% endfor %}
-                        {% if page_obj.has_next %}
-                            <li class="each-page-container"><a class="pages-button" href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
-                        {% else %}
-                            <li class="each-page-container disabled"><span>&raquo;</span></li>
-                        {% endif %}
                     </ul>
                 {% endif %}
 {#                    <div class="row d-flex justify-content-center">#}

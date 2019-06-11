@@ -1,18 +1,24 @@
 {% load cover %}
 {% load genre %}
 {% load added %}
+{% load is_deleted %}
 <div class="main-game-container">
     <img class="image-cover" src="{{ game|cover }}" alt="">
     <div class="lower-container">
         <div class="lower-inner-container">
             <div>
                 <h4 class="game_name">{{ game.name }}</h4>
-                <p class="game_version_title">{{ game|genre }}</p>
+                <p class="game_version_title">{% if game|genre %}{{ game|genre }}{% else %}No genre{% endif %}</p>
             </div>
             <div>
                 {% csrf_token %}
-                <button class="big-red-button must-button" type="button"
-                        onclick="send_ajax_must('/add_remove_must', {{ game.id }}, '');hideDiv(this);">UnMUST</button>
+                {% if game|is_deleted %}
+                    <button class="big-red-button must-button green-button" type="button"
+                            onclick="send_ajax_must('/add_remove_must', {{ game.id }}, true);changeDiv(this);">ReMUST</button>
+                {% else %}
+                    <button class="big-red-button must-button" type="button"
+                        onclick="send_ajax_must('/add_remove_must', {{ game.id }}, '');changeDiv(this);">UnMUST</button>
+                {% endif %}
             </div>
         </div>
         <div>

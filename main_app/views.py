@@ -182,7 +182,7 @@ class MustListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        game_ids = [each.game_id for each in MustModel.objects.filter(user=self.request.user, is_deleted=False)]
+        game_ids = [each.game_id for each in MustModel.objects.filter(user=self.request.user)]
         if game_ids:
             queryset = GameModel.objects.filter(id__in=game_ids)
             return queryset
@@ -193,11 +193,15 @@ class AddRemoveMustView(View):
     def post(self, request):
         game_id = int(request.POST.get('game_id', 0))
         add = request.POST.get('add')
+        force_remove = request.POST.get('force')
         if game_id:
             if add:
                 must = MustModel.objects.get_or_create(game_id=game_id, user=request.user)
                 must[0].is_deleted = False
                 must[0].save()
+            elif force_remove:
+                must = MustModel.objects.get(game_id=game_id, user=request.user)
+                must.delete()
             else:
                 must = MustModel.objects.get(game_id=game_id, user=request.user)
                 must.is_deleted = True
