@@ -1,4 +1,5 @@
 from datetime import datetime
+from urllib.parse import urlencode
 
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +15,7 @@ from django.views import View
 from django.views.generic import TemplateView, FormView, ListView, DetailView
 
 from main_app.forms import UserCreationForm
-from main_app.utils import send_email
+from main_app.utils import send_email, search_in_queryset
 from .twitter_api import Twitter
 from .tokens import account_activation_token
 from .models import UserModel, Must, Game, Screenshot, Genre, Platform
@@ -78,15 +79,39 @@ class MainPageView(LoginRequiredMixin, ListView):
     model = Game
     paginate_by = 6
 
+    def get_queryset(self):
+        search = self.request.GET.get('search', '')
+        platforms = self.request.GET.get('platforms', '')
+        genres = self.request.GET.get('genres', '')
+        try:
+            ur1 = int(self.request.GET.get('ur1', 0))
+            ur2 = int(self.request.GET.get('ur2', 10))
+        except ValueError:
+            ur1 = 0
+            ur2 = 10
+        if ur1 > ur2:
+            ur1, ur2 = ur2, ur1
+        platforms = search_in_queryset(Platform.objects.all(), platforms)
+        genres = search_in_queryset(Genre.objects.all(), genres)
+        if ur2 - ur1 == 10:
+            queryset = Game.objects.filter(platforms__in=platforms, genres__in=genres).distinct()
+        else:
+            queryset = Game.objects.filter(platforms__in=platforms, genres__in=genres,
+                                           rating__in=range(ur1 * 10, ur2 * 10 + 1)).distinct()
+        queryset = search_in_queryset(queryset, search)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({
+        query = {
             'search': self.request.GET.get('search', ''),
             'platforms': self.request.GET.get('platforms', ''),
             'genres': self.request.GET.get('genres', ''),
             'ur1': self.request.GET.get('ur1', '0'),
             'ur2': self.request.GET.get('ur2', '10'),
-        })
+        }
+        context['query'] = urlencode(query)
+        context.update(query)
         return context
 
 

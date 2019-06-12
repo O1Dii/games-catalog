@@ -57,7 +57,7 @@
                                     {% if page_obj.number == i %}
                                         <li class="each-page-container chosen-page"><span class="pages-button">{{ i }} <span class="sr-only">(current)</span></span></li>
                                     {% else %}
-                                        <li class="each-page-container"><a class="pages-button" href="?page={{ i }}">{{ i }}</a></li>
+                                        <li class="each-page-container"><a class="pages-button" href="?page={{ i }}&{{ query }}">{{ i }}</a></li>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}

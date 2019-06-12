@@ -8,8 +8,6 @@ register = template.Library()
 @register.filter
 def is_deleted(game):
     try:
-        obj = Must.objects.get(game=game)
-        deleted = obj.is_deleted
-        return deleted
+        return Must.objects.get(game=game).is_deleted
     except Must.DoesNotExist:
         return True
