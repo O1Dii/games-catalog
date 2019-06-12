@@ -68,6 +68,11 @@ class Must(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='musts')
     is_deleted = models.BooleanField(default=False)
 
+    def delete(self, force=False, *args, **kwargs):
+        if force:
+            super().delete(*args, **kwargs)
+        self.is_deleted = True
+
     def __str__(self):
         return f"{self.user.name} {self.game.id}"
 

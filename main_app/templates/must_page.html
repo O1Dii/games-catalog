@@ -9,9 +9,9 @@
 {% block body %}
     <div id="main-container">
         <h1>My MUST</h1>
-        {% if object_list %}
+        {% if musts %}
             <div id="games-list-container" class="d-flex flex-wrap justify-content-center">
-            {% for object in object_list %}
+            {% for must in musts %}
                 {% include 'game_must_template.html' %}
             {% endfor %}
             </div>
@@ -20,11 +20,6 @@
             <h1 class="center-text">You don't have MUST games yet</h1>
             <a href="{% url 'main_app:main_page' %}" class="center-content"><button class="big-red-button important-button">Get MUST games!</button></a>
             </div>
-{#        {% else %}#}
-{#            <div id="games-list-container" class="d-flex flex-column justify-content-center">#}
-{#            <h1 class="center-text">Nothing here</h1>#}
-{#            <a href="{% url 'main_app:main_page' %}" class="center-content"><button class="big-red-button important-button">Go back</button></a>#}
-{#            </div>#}
         {% endif %}
     </div>
     {% if is_paginated %}

@@ -1,14 +1,18 @@
-{% load added %}
-{% load is_deleted %}
+{% load static %}
+{% load game_catalog_tags %}
 <div class="main-game-container">
-    <img class="image-cover" src="{{ object.game.cover.all.0.url }}" alt="">
+    <img class="image-cover" src="{% if must.game.cover.all.0.url %}
+                                      {{ must.game.cover.all.0.url }}
+                                  {% else %}
+                                      {% static 'media/no_image.jpg' %}
+                                  {% endif %}" alt="">
     <div class="lower-container">
         <div class="lower-inner-container">
             <div>
-                <h4 class="game_name">{{ object.game.name }}</h4>
+                <h4 class="game_name">{{ must.game.name }}</h4>
                 <p class="game_version_title">
-                    {% if object.game.genres.all.0 %}
-                        {{ object.game.genres.all.0.name }}
+                    {% if must.game.genres.all.0 %}
+                        {{ must.game.genres.all.0.name }}
                     {% else %}
                         No genre
                     {% endif %}
@@ -16,17 +20,19 @@
             </div>
             <div>
                 {% csrf_token %}
-                {% if object.game|is_deleted %}
+                {% if must.game|is_deleted %}
                     <button class="big-red-button must-button green-button" type="button"
-                            onclick="send_ajax_must('/add_remove_must', {{ object.game.id }}, true);changeDiv(this);">ReMUST</button>
+                            onclick="send_ajax_must('/add_remove_must', {{ must.game.id }}, true);
+                            changeDiv(this);">ReMUST</button>
                 {% else %}
                     <button class="big-red-button must-button" type="button"
-                        onclick="send_ajax_must('/add_remove_must', {{ object.game.id }}, '');changeDiv(this);">UnMUST</button>
+                        onclick="send_ajax_must('/add_remove_must', {{ must.game.id }}, '');
+                        changeDiv(this);">UnMUST</button>
                 {% endif %}
             </div>
         </div>
         <div>
-            <p>Users added: {{ object.game|added }}</p>
+            <p>Users added: {{ must.game|added }}</p>
         </div>
     </div>
 </div>
