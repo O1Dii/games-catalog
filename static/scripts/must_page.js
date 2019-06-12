@@ -13,13 +13,18 @@ function send_ajax_must(url, val, add){
 
 function changeDiv(self) {
     console.log(self, self.innerHTML);
-    if(self.innerHTML[0] == "U"){
-        self.innerHTML = "ReMUST";
+    if(self.innerHTML.includes("UnMUST")){
+        console.log(1);
+        self.innerHTML = self.innerHTML.replace("UnMUST", "ReMUST");
         self.style.backgroundColor = "green";
         self.style.borderColor = "green";
     }
     else{
-        self.innerHTML = "UnMUST";
+        console.log(2);
+        self.innerHTML = self.innerHTML.replace("MUST", "UnMUST");
+        console.log(self.innerHTML);
+        self.innerHTML = self.innerHTML.replace("Re", "");
+        console.log(self.innerHTML);
         self.style.backgroundColor = "red";
         self.style.borderColor = "red";
     }

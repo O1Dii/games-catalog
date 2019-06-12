@@ -1,28 +1,32 @@
-{% load cover %}
-{% load genre %}
 {% load added %}
 {% load is_deleted %}
 <div class="main-game-container">
-    <img class="image-cover" src="{{ game|cover }}" alt="">
+    <img class="image-cover" src="{{ object.game.cover.all.0.url }}" alt="">
     <div class="lower-container">
         <div class="lower-inner-container">
             <div>
-                <h4 class="game_name">{{ game.name }}</h4>
-                <p class="game_version_title">{% if game|genre %}{{ game|genre }}{% else %}No genre{% endif %}</p>
+                <h4 class="game_name">{{ object.game.name }}</h4>
+                <p class="game_version_title">
+                    {% if object.game.genres.all.0 %}
+                        {{ object.game.genres.all.0.name }}
+                    {% else %}
+                        No genre
+                    {% endif %}
+                </p>
             </div>
             <div>
                 {% csrf_token %}
-                {% if game|is_deleted %}
+                {% if object.game|is_deleted %}
                     <button class="big-red-button must-button green-button" type="button"
-                            onclick="send_ajax_must('/add_remove_must', {{ game.id }}, true);changeDiv(this);">ReMUST</button>
+                            onclick="send_ajax_must('/add_remove_must', {{ object.game.id }}, true);changeDiv(this);">ReMUST</button>
                 {% else %}
                     <button class="big-red-button must-button" type="button"
-                        onclick="send_ajax_must('/add_remove_must', {{ game.id }}, '');changeDiv(this);">UnMUST</button>
+                        onclick="send_ajax_must('/add_remove_must', {{ object.game.id }}, '');changeDiv(this);">UnMUST</button>
                 {% endif %}
             </div>
         </div>
         <div>
-            <p>Users added: {{ game|added }}</p>
+            <p>Users added: {{ object.game|added }}</p>
         </div>
     </div>
 </div>

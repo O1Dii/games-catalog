@@ -7,4 +7,5 @@ register = template.Library()
 
 @register.filter
 def added(game):
-    return Must.objects.filter(game_id=game.id, is_deleted=False).count()
+    result = Must.objects.filter(game=game, is_deleted=False).count()
+    return result

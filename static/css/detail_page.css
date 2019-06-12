@@ -8,11 +8,18 @@
   border-style: solid; }
 
 .center-text {
+  margin: 0 !important;
+  padding: 0 !important;
   text-align: center; }
 
 .center-content {
   display: flex;
   justify-content: center; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }
 
 #content {
   margin: 1.5%; }

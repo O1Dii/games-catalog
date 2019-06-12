@@ -15,10 +15,18 @@ $green-color: green;
 }
 
 .center-text{
+  margin: 0 !important;
+  padding: 0 !important;
   text-align: center;
 }
 
 .center-content{
   display: flex;
   justify-content: center;
+}
+
+.green-button{
+  background-color: $green-color;
+  color: $secondary-color;
+  border-color: $green-color;
 }
