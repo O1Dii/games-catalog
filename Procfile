@@ -1,0 +1,1 @@
+web: gunicorn itechart_project.wsgi -b 0.0.0.0:$PORT

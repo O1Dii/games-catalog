@@ -14,14 +14,13 @@ select{
     background-color: transparent;
 }
 #submit-btn{
-    background-color: $primary-color;
-    color: $secondary-color;
-    border-color: $primary-color;
-    border-style: solid;
     width: 40%;
     height: 40px;
     align-self: center;
 }
 #sign-up{
     align-self: center;
+}
+th{
+    text-align: end;
 }

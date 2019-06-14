@@ -1,0 +1,136 @@
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
+.center-text {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
+.center-text {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
+.pages-container {
+  list-style-type: none;
+  align-self: center;
+  display: inline-flex;
+  margin-top: 10px;
+  height: 50px;
+  padding-left: 0; }
+
+.pages-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center; }
+
+.each-page-container {
+  margin: 5px;
+  width: 2rem;
+  padding-top: 1rem; }
+
+.chosen-page {
+  padding-top: 0; }
+
+.main-game-container {
+  height: 25em;
+  width: 20em;
+  margin: 1rem; }
+
+.image-cover {
+  width: 100%;
+  height: 80%; }
+
+.lower-container {
+  height: 20%;
+  border: solid 1px grey; }
+
+.lower-inner-container {
+  display: flex;
+  justify-content: space-between; }
+
+.must-button {
+  height: 100%;
+  width: auto;
+  margin-right: 0.2rem;
+  margin-top: 0.2rem; }
+
+.lower-inner-container h4, .lower-container p {
+  margin-bottom: 0; }
+
+.lower-inner-container h4 {
+  height: 30px; }
+
+.game_name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  width: 100%; }
+
+.important-button {
+  width: 40%;
+  height: 40px;
+  align-self: center; }

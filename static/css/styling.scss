@@ -28,10 +28,7 @@ html, body{
     border-color: $secondary-color;
     border-style: solid;
 }
-.green-button{
-    background-color: green;
-    color: $secondary-color;
-    border-color: green;
+.my-musts-btn{
     margin-right: 0;
 }
 .nav p, .nav ins{
@@ -71,4 +68,9 @@ a:hover{
 }
 button:hover{
     cursor: pointer;
+}
+.green-button{
+  background-color: $green-color;
+  color: $secondary-color;
+  border-color: $green-color;
 }

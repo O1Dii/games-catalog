@@ -8,11 +8,11 @@
 {% block body %}
     <div id="main-container" class="d-flex flex-column justify-content-center">
     {% if DoesNotExist %}
-        <h3>Неверный токен или id</h3>
+        <h3>Invalid token or id</h3>
     {% else %}
-        <h3>Вам на почту отправлено письмо с ссылкой для подтвержения email</h3>
-        <h5>Если письмо не пришло, нажмите на кнопку для повторной отправки</h5>
-        <a href="?"><button id="send-again-btn" type="button">Повторная отправка</button></a>
+        <h3>We send you an email to confirm your registration</h3>
+        <h5>If you haven't recieve the email, please press the button</h5>
+        <a href="?"><button id="send-again-btn" type="button">Send new email</button></a>
     {% endif %}
     </div>
 {% endblock %}

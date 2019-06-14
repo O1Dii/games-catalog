@@ -1,3 +1,39 @@
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
+.center-text {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
 html, body {
   height: 100%; }
 
@@ -26,10 +62,7 @@ html, body {
   border-color: white;
   border-style: solid; }
 
-.green-button {
-  background-color: green;
-  color: white;
-  border-color: green;
+.my-musts-btn {
   margin-right: 0; }
 
 .nav p, .nav ins {
@@ -69,3 +102,8 @@ a:hover {
 
 button:hover {
   cursor: pointer; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }

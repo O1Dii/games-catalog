@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load game_catalog_tags %}
 
 {% block head %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/detail_page.css' %}">
     <script src="{% static 'scripts/details.js' %}"></script>
+    <script src="{% static 'scripts/must_page.js' %}"></script>
 {% endblock %}
 
 {% block body %}
@@ -12,21 +14,39 @@
             <div class="col-9">
                 <div class="container-fluid">
                     <div id="title-container" class="row">
-                        <div class="col-3"><h1>{{ name }}</h1></div>
-                        <div class="d-flex text-with-background align-items-center"><h1>MUST</h1></div>
+                        <div><h1>{{ game.name }}</h1></div>
+                        <div class="d-flex">
+                            {% csrf_token %}
+                            {% if game|is_deleted:request.user %}
+                                <button class="d-flex text-with-background align-items-center"
+                                        onclick="send_ajax_must('/add_remove_must', {{ game.id }}, true);changeDiv(this)">
+                                    <h1 class="center-text">MUST</h1>
+                                </button>
+                            {% else %}
+                                <button class="d-flex text-with-background align-items-center"
+                                        onclick="send_ajax_must('/add_remove_must', {{ game.id }}, '');changeDiv(this)">
+                                    <h1 class="center-text">UnMUST</h1>
+                                </button>
+                            {% endif %}
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-8">
-                            <h5>{{ version_title }}</h5>
+                            <h5>{% if game.version_title %}{{ game.version_title }}{% endif %}</h5>
                             <h3>Description</h3>
-                            <p>{{ description }}</p>
+                            <p>{% if game.summary %}{{ game.summary }}{% else %}No description{% endif %}</p>
                             <h3>Release Date</h3>
-                            <p>{{ release_date }}</p>
+                            <p>{% if game.first_release_date %}
+                                    {{ game.first_release_date }}
+                                {% else %}
+                                    No release date
+                                {% endif %}
+                            </p>
                             <h3>Screenshots</h3>
                             <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
-                                {% for screenshot in screenshots %}
+                                {% for screenshot in game.screenshots.all %}
                                     <div class="marg-bottom marg-right">
-                                        <img class="screenshot" src="{{ screenshot }}">
+                                        <img class="screenshot" src="{{ screenshot.url }}">
                                     </div>
                                 {% endfor %}
                             </div>
@@ -37,23 +57,29 @@
                             <div id="users-rating" class="d-flex text-with-background marg-bottom align-items-center
                              justify-content-between">
                                 <h5>Users</h5>
-                                <h5 id="users_rating_value">{{ user_ratings }} ({{ users_reviews }} review)</h5>
+                                <h5 id="users_rating_value">
+                                    {% if game.rating %}{{ game.rating|divide:10 }}{% else %}No rating{% endif %} (
+                                    {% if game.rating_count %}{{ game.rating_count }}{% else %}0{% endif %} reviews )
+                                </h5>
                             </div>
                             <div id="critics-rating" class="d-flex text-with-background align-items-center
                              justify-content-between">
                                 <h5>Critics</h5>
-                                <h5 id="critics_rating_value">{{ critics_ratings }} ({{ critics_reviews }} review)</h5>
+                                <h5 id="critics_rating_value">
+                                    {% if game.aggregated_rating %}{{ game.aggregated_rating|divide:10 }}{% else %}No rating{% endif %} (
+                                    {% if game.aggregated_rating_count %}{{ game.aggregated_rating_count }}{% else %}0{% endif %} reviews )
+                                </h5>
                             </div>
                             <h3>Genres</h3>
                             <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
-                                {% for genre in genres %}
-                                    <div class="text-with-background marg-right marg-bottom"><h5>{{ genre }}</h5></div>
+                                {% for genre in game.genres.all %}
+                                    <div class="text-with-background marg-right marg-bottom"><h5>{{ genre.name }}</h5></div>
                                 {% endfor %}
                             </div>
                             <h3>Platforms</h3>
                             <div class="d-flex flex-wrap flex-row align-content-start flex-fill">
-                                {% for platform in platforms %}
-                                    <div class="text-with-background marg-right marg-bottom"><h5>{{ platform }}</h5></div>
+                                {% for platform in game.platforms.all %}
+                                    <div class="text-with-background marg-right marg-bottom"><h5>{{ platform.name }}</h5></div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -61,7 +87,7 @@
                 </div>
             </div>
             <div class="col-3">
-                <h2>#{{ name }} Tweets</h2>
+                <h2>#{{ game.name }} Tweets</h2>
                 <div class="d-flex flex-wrap flex-column">
                     {% for tweet in tweets %}
                         {% include 'tweet_template.html' %}

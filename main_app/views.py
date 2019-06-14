@@ -1,21 +1,22 @@
 from datetime import datetime
+from urllib.parse import urlencode
 
 from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.views import View
-from django.views.generic import TemplateView, FormView
+from django.views.generic import TemplateView, FormView, ListView, DetailView
 
 from main_app.forms import UserCreationForm
-from main_app.utils import send_email
-from .igdb_api import IGDB
+from main_app.utils import send_email, search_in_queryset
 from .twitter_api import Twitter
 from .tokens import account_activation_token
-from .models import UserModel
+from .models import UserModel, Must, Game, Genre, Platform
 
 
 class SendEmail(TemplateView):
@@ -42,58 +43,58 @@ class SendEmail(TemplateView):
         return context
 
 
-class MainPageView(LoginRequiredMixin, TemplateView):
+class MainPageView(LoginRequiredMixin, ListView):
     template_name = 'main_page.html'
+    model = Game
+    paginate_by = 6
+    context_object_name = 'games'
+
+    def get_queryset(self):
+        search = self.request.GET.get('search', '')
+        platforms = self.request.GET.get('platforms', '')
+        genres = self.request.GET.get('genres', '')
+        try:
+            ur1 = int(self.request.GET.get('ur1', 0))
+            ur2 = int(self.request.GET.get('ur2', 10))
+        except ValueError:
+            ur1 = 0
+            ur2 = 10
+        if ur1 > ur2:
+            ur1, ur2 = ur2, ur1
+        platforms = search_in_queryset(Platform.objects.all(), platforms)
+        genres = search_in_queryset(Genre.objects.all(), genres)
+        if ur2 - ur1 == 10:
+            queryset = Game.objects.filter(platforms__in=platforms, genres__in=genres).distinct()
+        else:
+            queryset = Game.objects.filter(platforms__in=platforms, genres__in=genres,
+                                           rating__in=range(ur1 * 10, ur2 * 10 + 1)).distinct()
+        queryset = search_in_queryset(queryset, search)
+        return queryset
 
     def get_context_data(self, **kwargs):
-        client = IGDB(6)
         context = super().get_context_data(**kwargs)
-        current_page = self.request.GET.get('page', 1)
-        games = client.api_get_games_list(**{key: value for key, value in self.request.GET.items()})
-        pages_amount = client.api_get_last_pages_amount()
-        left_pages = list([str(i) for i in range(max(int(current_page) - 3, 1), int(current_page))])
-        right_pages = list([str(i) for i in range(min(int(current_page) + 1, pages_amount + 1),
-                                                  min(int(current_page) + 4, pages_amount + 1))])
-        end = int(right_pages[-1]) if right_pages else pages_amount
-        context.update({
-            'games': games,
+        query = {
             'search': self.request.GET.get('search', ''),
             'platforms': self.request.GET.get('platforms', ''),
             'genres': self.request.GET.get('genres', ''),
             'ur1': self.request.GET.get('ur1', '0'),
             'ur2': self.request.GET.get('ur2', '10'),
-            'pages_amount': pages_amount,
-            'current_page': current_page,
-            'left_pages': left_pages,
-            'right_pages': right_pages,
-            'end': end
-        })
+        }
+        context['query'] = urlencode(query)
+        context.update(query)
         return context
 
 
-class DetailPageView(LoginRequiredMixin, TemplateView):
+class DetailPageView(LoginRequiredMixin, DetailView):
     template_name = 'detail_page.html'
+    model = Game
+    context_object_name = 'game'
 
-    def get_context_data(self, game_id, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        client = IGDB(6)
-        game = client.api_get_game(game_id)[0]
         twitter = Twitter()
-        tweets = list(twitter.get_tweets_via_hashtag(game.get('name')))
-        context.update({
-            'name': game.get('name', ''),
-            'version_title': game.get('version_title', ''),
-            'description': game.get('summary', ''),
-            'release_date': datetime.utcfromtimestamp(game.get('first_release_date')).strftime('%Y %b %d'),
-            'screenshots': game.get('screenshots'),
-            'user_ratings': game.get('rating', '0'),
-            'critics_ratings': game.get('aggregated_rating', '0'),
-            'genres': game.get('genres'),
-            'platforms': game.get('platforms'),
-            'users_reviews': game.get('rating_count', '0'),
-            'critics_reviews': game.get('aggregated_rating_count', '0'),
-            'tweets': tweets
-        })
+        tweets = list(twitter.get_tweets_via_hashtag(self.object.name))
+        context['tweets'] = tweets
         return context
 
 
@@ -131,15 +132,44 @@ class ActivationView(View):
 class LoginPageView(LoginView):
     template_name = 'login_register_page.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data()
+        context['log_in'] = True
+        return context
+
 
 class LogoutPageView(LogoutView):
     pass
 
 
-class UserPageView(TemplateView):
+class UserPageView(LoginRequiredMixin, TemplateView):
     template_name = 'user_page.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['age'] = round((datetime.date(datetime.now()) - self.request.user.birthday).days / 365.25)
         return context
+
+
+class MustListView(LoginRequiredMixin, ListView):
+    template_name = 'must_page.html'
+    paginate_by = 10
+    context_object_name = 'musts'
+
+    def get_queryset(self):
+        temp = Must.objects.filter(user=self.request.user)
+        return temp
+
+
+class AddRemoveMustView(View):
+    def post(self, request):
+        game_id = int(request.POST['game_id'])
+        add = request.POST.get('add')
+        if add:
+            must = Must.objects.get_or_create(game=Game.objects.get(id=game_id), user=request.user)
+            must[0].is_deleted = False
+            must[0].save()
+        else:
+            Must.objects.get(game=Game.objects.get(id=game_id), user=request.user).delete()
+        return HttpResponse('')
+

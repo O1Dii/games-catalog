@@ -15,8 +15,12 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 from django.urls import reverse_lazy
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import dj_database_url
+import django_heroku
 
+from .utils import _get_env_variable
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -29,7 +33,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'main_app',
 ]
 
@@ -72,26 +76,27 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'itechart_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DATABASE'),
-        'USER': os.getenv('DATABASE'),
-        'PASSWORD': os.getenv('DATABASE_PASSWORD'),
-        'HOST': os.getenv('DATABASE_HOST'),
-        'PORT': os.getenv('DATABASE_PORT')
+        'NAME': _get_env_variable('DB_NAME'),
+        'USER': _get_env_variable('DB_USER'),
+        'PASSWORD': _get_env_variable('DB_PASSWORD'),
+        'HOST': _get_env_variable('DB_HOST'),
+        'PORT': 5432
     }
 }
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
 
 AUTH_USER_MODEL = 'main_app.UserModel'
 
 AUTHENTICATION_BACKENDS = ['main_app.backends.MyAuthBackend',
                            'django.contrib.auth.backends.ModelBackend']
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -111,7 +116,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
@@ -125,7 +129,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
@@ -137,16 +140,18 @@ LOGOUT_REDIRECT_URL = reverse_lazy('main_app:login_page')
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv('EMAIL_SENDER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_SENDER_PASSWORD')
+EMAIL_HOST_USER = _get_env_variable('EMAIL_SENDER')
+EMAIL_HOST_PASSWORD = _get_env_variable('EMAIL_SENDER_PASSWORD')
 EMAIL_PORT = 587
 
 STATIC_URL = '/static/'
 # STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
-IGDB_API_KEY = os.getenv('IGDB_API_KEY')
-CONSUMER_TOKEN = os.getenv('TWITTER_CONSUMER_TOKEN')
-CONSUMER_TOKEN_SECRET = os.getenv('TWITTER_CONSUMER_TOKEN_SECRET')
-ACCESS_TOKEN = os.getenv('TWITTER_ACCESS_TOKEN')
-ACCESS_TOKEN_SECRET = os.getenv('TWITTER_ACCESS_TOKEN_SECRET')
+IGDB_API_KEY = _get_env_variable('IGDB_API_KEY')
+CONSUMER_TOKEN = _get_env_variable('TWITTER_CONSUMER_TOKEN')
+CONSUMER_TOKEN_SECRET = _get_env_variable('TWITTER_CONSUMER_TOKEN_SECRET')
+ACCESS_TOKEN = _get_env_variable('TWITTER_ACCESS_TOKEN')
+ACCESS_TOKEN_SECRET = _get_env_variable('TWITTER_ACCESS_TOKEN_SECRET')
+
+django_heroku.settings(locals())

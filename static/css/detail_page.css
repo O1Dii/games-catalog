@@ -1,3 +1,39 @@
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
+.center-text {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
 #content {
   margin: 1.5%; }
 
@@ -36,4 +72,4 @@
   padding-right: 5px; }
 
 #users-rating, #critics-rating {
-  height: 10%; }
+  height: 5rem; }

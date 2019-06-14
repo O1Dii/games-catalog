@@ -1,3 +1,46 @@
 $primary-color: red;
 $secondary-color: white;
 $black-color: black;
+$green-color: green;
+
+#main-container{
+  padding: 1%;
+}
+
+.big-red-button{
+  background-color: $primary-color;
+  color: $secondary-color;
+  border-color: $primary-color;
+  border-style: solid;
+}
+
+.center-text{
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.center-content{
+  display: flex;
+  justify-content: center;
+}
+
+.green-button{
+  background-color: $green-color;
+  color: $secondary-color;
+  border-color: $green-color;
+}
+
+a:active{
+    text-decoration: none;
+}
+a:hover{
+    text-decoration: none;
+    color: $secondary-color;
+}
+a:focus{
+    text-decoration: none;
+}
+a:hover{
+    cursor: pointer;
+}

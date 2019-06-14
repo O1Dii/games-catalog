@@ -1,5 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
+from django.db.models import QuerySet
 from django.template.loader import render_to_string
 from django.urls.converters import StringConverter
 from django.utils.encoding import force_bytes
@@ -25,3 +26,12 @@ def send_email(request, user):
 
 class TokenConverter(StringConverter):
     regex = '[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20}'
+
+
+def search_in_queryset(queryset, search: str, search_field: str = 'name'):
+    if queryset and search != '':
+        if isinstance(queryset, QuerySet) and hasattr(queryset[0], search_field):
+            query = {f"{search_field}__search": search}
+            return queryset.filter(**query)
+        raise AttributeError(f"queryset doesn't have {search_field} attribute")
+    return queryset

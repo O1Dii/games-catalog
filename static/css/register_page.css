@@ -1,3 +1,39 @@
+#main-container {
+  padding: 1%; }
+
+.big-red-button {
+  background-color: red;
+  color: white;
+  border-color: red;
+  border-style: solid; }
+
+.center-text {
+  margin: 0 !important;
+  padding: 0 !important;
+  text-align: center; }
+
+.center-content {
+  display: flex;
+  justify-content: center; }
+
+.green-button {
+  background-color: green;
+  color: white;
+  border-color: green; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
 input {
   border: none;
   border-bottom: 2px solid black;
@@ -12,13 +48,12 @@ select {
   background-color: transparent; }
 
 #submit-btn {
-  background-color: red;
-  color: white;
-  border-color: red;
-  border-style: solid;
   width: 40%;
   height: 40px;
   align-self: center; }
 
 #sign-up {
   align-self: center; }
+
+th {
+  text-align: end; }

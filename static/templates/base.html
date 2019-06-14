@@ -17,10 +17,10 @@
 <nav class="nav justify-content-between">
     <ul>
         <li>
-            <img src="{% static 'media/logo.png' %}" height="50" width="65">
+            <a href="{% url 'main_app:main_page' %}"><img src="{% static 'media/logo.png' %}" height="50" width="65"></a>
         </li>
         <li>
-            <h1 class="nav-item">GameMuster</h1>
+            <a href="{% url 'main_app:main_page' %}"><h1 class="nav-item">GameMuster</h1></a>
         </li>
     </ul>
     <div>
@@ -34,8 +34,8 @@
             </a>
         {% else %}
             <p>Hello</p><a href="{% url 'main_app:user_page' %}"><ins>{{ request.user.username }}!</ins></a>
-            <a href="">
-                <button class="nav-button green-button">My MUSTs</button>
+            <a href="{% url 'main_app:must_page' %}">
+                <button class="nav-button green-button my-musts-btn">My MUSTs</button>
             </a>
             <a href="{% url 'main_app:logout' %}">
                 <button class="nav-button">Log out</button>

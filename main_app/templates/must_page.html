@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/must_page.css' %}">
+    <script type="text/javascript" src="{% static 'scripts/must_page.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+    <div id="main-container">
+        <h1>My MUST</h1>
+        {% if musts %}
+            <div id="games-list-container" class="d-flex flex-wrap justify-content-center">
+            {% for must in musts %}
+                {% include 'game_must_template.html' %}
+            {% endfor %}
+            </div>
+        {% else %}
+            <div id="games-list-container" class="d-flex flex-column justify-content-center">
+            <h1 class="center-text">You don't have MUST games yet</h1>
+            <a href="{% url 'main_app:main_page' %}" class="center-content"><button class="big-red-button important-button">Get MUST games!</button></a>
+            </div>
+        {% endif %}
+        <div class="d-flex justify-content-center">
+            {% if is_paginated %}
+                <ul class="pages-container">
+                    {% for i in paginator.page_range %}
+                        {% if forloop.counter > page_obj.number|add:"-3" %}
+                            {% if forloop.counter < page_obj.number|add:"3" %}
+                                {% if page_obj.number == i %}
+                                    <li class="each-page-container chosen-page"><span class="pages-button">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li class="each-page-container"><a class="pages-button" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

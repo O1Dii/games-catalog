@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import PermissionsMixin
 from django.db import models
@@ -46,3 +47,52 @@ class UserModel(PermissionsMixin, AbstractBaseUser):
 
     def __str__(self):
         return self.email
+
+
+class Game(models.Model):
+    class Meta:
+        ordering = ['rating']
+
+    name = models.CharField(max_length=250, unique=True)
+    rating = models.DecimalField(decimal_places=5, max_digits=8, null=True)
+    version_title = models.CharField(max_length=100, null=True)
+    aggregated_rating = models.DecimalField(decimal_places=5, max_digits=8, null=True)
+    summary = models.CharField(max_length=10000, null=True)
+    first_release_date = models.DateField(null=True)
+    rating_count = models.DecimalField(decimal_places=0, max_digits=7, null=True)
+    aggregated_rating_count = models.DecimalField(decimal_places=0, max_digits=7, null=True)
+
+
+class Must(models.Model):
+    game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='musts')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='musts')
+    is_deleted = models.BooleanField(default=False)
+
+    def delete(self, force=False, *args, **kwargs):
+        if force:
+            super().delete(*args, **kwargs)
+        self.is_deleted = True
+        self.save()
+
+    def __str__(self):
+        return f"{self.user.username} {self.game.id}"
+
+
+class Genre(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    games = models.ManyToManyField(Game, related_name="genres")
+
+
+class Platform(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    games = models.ManyToManyField(Game, related_name="platforms")
+
+
+class Cover(models.Model):
+    url = models.URLField()
+    game = models.ForeignKey(Game, related_name="cover", on_delete=models.CASCADE)
+
+
+class Screenshot(models.Model):
+    url = models.URLField()
+    game = models.ForeignKey(Game, related_name="screenshots", on_delete=models.CASCADE)
