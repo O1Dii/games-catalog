@@ -112,7 +112,8 @@ class IGDB:
                 result.extend(self.__api_get(query))
             for i in range(round((amount - 200) / 10)):
                 games_list = [i * 10 + j for j in range(10)]
-                query = f'{category}/{games_list}?fields={fields}'
+                games_list_str = ','.join(map(str, games_list))
+                query = f'{category}/{games_list_str}?fields={fields}'
                 result.extend(self.__api_get(query))
         else:
             short_val = math.floor(amount / 50)
