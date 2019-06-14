@@ -9,9 +9,12 @@ from main_app.models import (Game, Genre, Platform, Cover, Screenshot)
 class Command(BaseCommand):
     help = 'synchronizes local database with igdb database'
 
+    def add_arguments(self, parser):
+        parser.add_argument('amount', type=int)
+
     def handle(self, *args, **options):
         client = IGDB(1)
-        games_list = client.api_get_first_games(500)
+        games_list = client.api_get_first_games(options['amount'])
         covers = {}
         screenshots = {}
         platforms = {}
@@ -34,6 +37,7 @@ class Command(BaseCommand):
             if game.get('first_release_date'):
                 game['first_release_date'] = datetime.utcfromtimestamp(game['first_release_date']).strftime('%Y-%m-%d')
             if game.get('status') not in [500, 404, 401, 403]:
+                print(game)
                 Game.objects.update_or_create(id=game['id'], defaults=game)
 
         genre_list = client.api_get_names('genres', [j for i in genres.values() for j in i])

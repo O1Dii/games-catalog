@@ -54,13 +54,13 @@ class Game(models.Model):
         ordering = ['rating']
 
     name = models.CharField(max_length=250, unique=True)
-    rating = models.DecimalField(decimal_places=0, max_digits=3, null=True)
+    rating = models.DecimalField(decimal_places=5, max_digits=8, null=True)
     version_title = models.CharField(max_length=100, null=True)
-    aggregated_rating = models.DecimalField(decimal_places=0, max_digits=3, null=True)
-    summary = models.CharField(max_length=2500, null=True)
+    aggregated_rating = models.DecimalField(decimal_places=5, max_digits=8, null=True)
+    summary = models.CharField(max_length=10000, null=True)
     first_release_date = models.DateField(null=True)
-    rating_count = models.DecimalField(decimal_places=0, max_digits=3, null=True)
-    aggregated_rating_count = models.DecimalField(decimal_places=0, max_digits=3, null=True)
+    rating_count = models.DecimalField(decimal_places=0, max_digits=7, null=True)
+    aggregated_rating_count = models.DecimalField(decimal_places=0, max_digits=7, null=True)
 
 
 class Must(models.Model):
