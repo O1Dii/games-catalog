@@ -21,6 +21,19 @@
   color: white;
   border-color: green; }
 
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
 input {
   border: none;
   border-bottom: 2px solid black;
@@ -41,3 +54,6 @@ select {
 
 #sign-up {
   align-self: center; }
+
+th {
+  text-align: end; }

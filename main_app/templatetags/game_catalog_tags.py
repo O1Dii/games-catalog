@@ -19,8 +19,8 @@ def divide(value, arg):
 
 
 @register.filter
-def is_deleted(game):
+def is_deleted(game, user):
     try:
-        return Must.objects.get(game=game).is_deleted
+        return Must.objects.get(game=game, user=user).is_deleted
     except Must.DoesNotExist:
         return True

@@ -21,6 +21,19 @@
   color: white;
   border-color: green; }
 
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
+
 #main-container {
   padding: 1%; }
 
@@ -43,6 +56,19 @@
   background-color: green;
   color: white;
   border-color: green; }
+
+a:active {
+  text-decoration: none; }
+
+a:hover {
+  text-decoration: none;
+  color: white; }
+
+a:focus {
+  text-decoration: none; }
+
+a:hover {
+  cursor: pointer; }
 
 .pages-container {
   list-style-type: none;

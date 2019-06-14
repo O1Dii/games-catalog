@@ -21,20 +21,22 @@
             <a href="{% url 'main_app:main_page' %}" class="center-content"><button class="big-red-button important-button">Get MUST games!</button></a>
             </div>
         {% endif %}
-    </div>
-    {% if is_paginated %}
-        <ul class="pages-container">
-            {% for i in paginator.page_range %}
-                {% if forloop.counter > page_obj.number|add:"-3" %}
-                    {% if forloop.counter < page_obj.number|add:"3" %}
-                        {% if page_obj.number == i %}
-                            <li class="each-page-container chosen-page"><span class="pages-button">{{ i }} <span class="sr-only">(current)</span></span></li>
-                        {% else %}
-                            <li class="each-page-container"><a class="pages-button" href="?page={{ i }}">{{ i }}</a></li>
+        <div class="d-flex justify-content-center">
+            {% if is_paginated %}
+                <ul class="pages-container">
+                    {% for i in paginator.page_range %}
+                        {% if forloop.counter > page_obj.number|add:"-3" %}
+                            {% if forloop.counter < page_obj.number|add:"3" %}
+                                {% if page_obj.number == i %}
+                                    <li class="each-page-container chosen-page"><span class="pages-button">{{ i }} <span class="sr-only">(current)</span></span></li>
+                                {% else %}
+                                    <li class="each-page-container"><a class="pages-button" href="?page={{ i }}">{{ i }}</a></li>
+                                {% endif %}
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-        </ul>
-    {% endif %}
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

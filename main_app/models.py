@@ -72,9 +72,10 @@ class Must(models.Model):
         if force:
             super().delete(*args, **kwargs)
         self.is_deleted = True
+        self.save()
 
     def __str__(self):
-        return f"{self.user.name} {self.game.id}"
+        return f"{self.user.username} {self.game.id}"
 
 
 class Genre(models.Model):

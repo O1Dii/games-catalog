@@ -12,11 +12,27 @@
     <div class="d-flex justify-content-center align-items-center">
         <form class="d-flex flex-column" method="post">
             {% csrf_token %}
-            <div class="d-flex align-items-end flex-column">
-                <h2 id="sign-up">Sign Up</h2>
-                {{ form.as_p }}
+            <div class="d-flex align-items-center flex-column">
+            <h2 id="sign-up">
+                {% if log_in %}
+                    Log In
+                {% else %}
+                    Sign Up
+                {% endif %}</h2>
+            {% if invalid_login %}
+                <h5>Incorrect username or password</h5>
+            {% endif %}
+            <table>
+                {{ form.as_table }}
+            </table>
             </div>
-            <button id="submit-btn" class="big-red-button" type="submit">Sign me up!</button>
+            <button id="submit-btn" class="big-red-button" type="submit">
+                {% if log_in %}
+                    Log in
+                {% else %}
+                    Sign me up!
+                {% endif %}
+            </button>
         </form>
     </div>
 {% endblock %}

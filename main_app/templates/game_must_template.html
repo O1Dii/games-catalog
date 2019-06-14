@@ -20,19 +20,20 @@
             </div>
             <div>
                 {% csrf_token %}
-                {% if must.game|is_deleted %}
+                {% if must.game|is_deleted:request.user %}
                     <button class="big-red-button must-button green-button" type="button"
                             onclick="send_ajax_must('/add_remove_must', {{ must.game.id }}, true);
-                            changeDiv(this);">ReMUST</button>
+                            changeDiv(this);changeAdded(this, {{ must.game.id }})">ReMUST</button>
                 {% else %}
                     <button class="big-red-button must-button" type="button"
                         onclick="send_ajax_must('/add_remove_must', {{ must.game.id }}, '');
-                        changeDiv(this);">UnMUST</button>
+                        changeDiv(this);
+                        changeAdded(this, {{ must.game.id }});">UnMUST</button>
                 {% endif %}
             </div>
         </div>
         <div>
-            <p>Users added: {{ must.game|added }}</p>
+            <p id="added_{{ must.game.id }}">Users added: {{ must.game|added }}</p>
         </div>
     </div>
 </div>
