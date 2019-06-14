@@ -132,13 +132,8 @@ class ActivationView(View):
 class LoginPageView(LoginView):
     template_name = 'login_register_page.html'
 
-    def form_invalid(self, form):
-        return self.render_to_response(self.get_context_data(form=form, invalid_form=True))
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data()
-        if kwargs.get('invalid_form'):
-            context['invalid_login'] = True
         context['log_in'] = True
         return context
 

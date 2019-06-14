@@ -19,9 +19,6 @@
                 {% else %}
                     Sign Up
                 {% endif %}</h2>
-            {% if invalid_login %}
-                <h5>Incorrect username or password</h5>
-            {% endif %}
             <table>
                 {{ form.as_table }}
             </table>
