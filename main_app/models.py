@@ -22,6 +22,21 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def create_user(self, username, email, first_name, last_name, birthday, gender, password):
+        user = self.model(
+            is_superuser=False,
+            is_staff=False,
+            username=username,
+            email=email,
+            first_name=first_name,
+            last_name=last_name,
+            birthday=birthday,
+            gender=gender
+        )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
 
 class UserModel(PermissionsMixin, AbstractBaseUser):
     GENDER_CHOICES = (
@@ -31,8 +46,8 @@ class UserModel(PermissionsMixin, AbstractBaseUser):
     id = models.AutoField(primary_key=True, blank=True)
     username = models.CharField(max_length=25, unique=True)
     email = models.EmailField(max_length=120, unique=True, null=False, blank=False)
-    first_name = models.CharField(max_length=50, default=" ")
-    last_name = models.CharField(max_length=100, default=" ")
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     birthday = models.DateField()
 
@@ -71,8 +86,9 @@ class Must(models.Model):
     def delete(self, force=False, *args, **kwargs):
         if force:
             super().delete(*args, **kwargs)
-        self.is_deleted = True
-        self.save()
+        else:
+            self.is_deleted = True
+            self.save()
 
     def __str__(self):
         return f"{self.user.username} {self.game.id}"

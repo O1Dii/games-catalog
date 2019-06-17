@@ -7,48 +7,16 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import TemplateView, FormView, ListView, DetailView
 
 from main_app.forms import UserCreationForm
-from main_app.utils import send_email, search_in_queryset
+from main_app.utils import send_email, search_in_queryset, auth_token_check
 from .twitter_api import Twitter
-from .tokens import account_activation_token
 from .models import UserModel, Must, Game, Genre, Platform
 
 
-class SendEmail(TemplateView):
-    template_name = 'send_email.html'
-
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data(**kwargs)
-        if context.get('active'):
-            return redirect(reverse_lazy('main_app:main_page'))
-        return self.render_to_response(context)
-
-    def get_context_data(self, user_id, **kwargs):
-        context = super().get_context_data(**kwargs)
-        try:
-            user = UserModel.objects.get(id=user_id)
-        except UserModel.DoesNotExist:
-            context['DoesNotExist'] = True
-        else:
-            if user.is_active:
-                context['active'] = True
-            else:
-                send_email(self.request, user)
-                context['active'] = False
-        return context
-
-
-class MainPageView(LoginRequiredMixin, ListView):
-    template_name = 'main_page.html'
-    model = Game
-    paginate_by = 6
-    context_object_name = 'games'
-
+class GamesFilteredQuerysetMixin:
     def get_queryset(self):
         search = self.request.GET.get('search', '')
         platforms = self.request.GET.get('platforms', '')
@@ -67,9 +35,43 @@ class MainPageView(LoginRequiredMixin, ListView):
             queryset = Game.objects.filter(platforms__in=platforms, genres__in=genres).distinct()
         else:
             queryset = Game.objects.filter(platforms__in=platforms, genres__in=genres,
-                                           rating__in=range(ur1 * 10, ur2 * 10 + 1)).distinct()
+                                           rating__range=(ur1 * 10, ur2 * 10 + 1)).distinct()
         queryset = search_in_queryset(queryset, search)
         return queryset
+
+
+class SendEmail(TemplateView):
+    template_name = 'send_email.html'
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        if context.get('active'):
+            return redirect(reverse_lazy('main_app:main_page'))
+        return self.render_to_response(context)
+
+    def get_context_data(self, user_id=0, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if user_id == 0:
+            context['DoesNotExist'] = True
+            return context
+        try:
+            user = UserModel.objects.get(id=user_id)
+        except UserModel.DoesNotExist:
+            context['DoesNotExist'] = True
+        else:
+            if user.is_active:
+                context['active'] = True
+            else:
+                send_email(self.request, user)
+                context['active'] = False
+        return context
+
+
+class MainPageView(GamesFilteredQuerysetMixin, LoginRequiredMixin, ListView):
+    template_name = 'main_page.html'
+    model = Game
+    paginate_by = 6
+    context_object_name = 'games'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -114,19 +116,14 @@ class RegisterPageView(FormView):
 
 class ActivationView(View):
     def get(self, request, uidb64, token):
-        uid = 0
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = UserModel.objects.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
-            user = None
-        if user is not None and account_activation_token.check_token(user, token):
+        user = auth_token_check(uidb64, token)
+        if user:
             user.is_active = True
             user.save()
             login(request, user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect(reverse_lazy('main_app:main_page'))
         else:
-            return redirect(reverse_lazy('main_app:send_email', kwargs={'user_id': uid}))
+            return redirect(reverse_lazy('main_app:send_email'))
 
 
 class LoginPageView(LoginView):
@@ -172,4 +169,3 @@ class AddRemoveMustView(View):
         else:
             Must.objects.get(game=Game.objects.get(id=game_id), user=request.user).delete()
         return HttpResponse('')
-

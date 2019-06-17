@@ -2,5 +2,9 @@
 Hi {{ user.username }},
 Please click on the link to confirm your registration,
 
+{% if api %}
+http://{{ domain }}{% url 'api_app:activate' uidb64=uid token=token %}
+{% else %}
 http://{{ domain }}{% url 'main_app:activate' uidb64=uid token=token %}
+{% endif %}
 {% endautoescape %}

@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.postgres',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'api_app',
     'main_app',
 ]
 
@@ -74,6 +77,14 @@ TEMPLATES = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10
+}
+
 WSGI_APPLICATION = 'itechart_project.wsgi.application'
 
 # Database
@@ -86,7 +97,7 @@ DATABASES = {
         'USER': _get_env_variable('DB_USER'),
         'PASSWORD': _get_env_variable('DB_PASSWORD'),
         'HOST': _get_env_variable('DB_HOST'),
-        'PORT': 5432
+        'PORT': int(_get_env_variable('DB_PORT'))
     }
 }
 
@@ -131,6 +142,14 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
+
+API_PAGES = int(_get_env_variable('API_PAGES'))
+
+REDIS_HOST = _get_env_variable('REDIS_HOST')
+REDIS_PORT = _get_env_variable('REDIS_PORT')
+BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 
 DATE_INPUT_FORMATS = ['%d.%m.%Y']
 

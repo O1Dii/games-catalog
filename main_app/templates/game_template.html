@@ -14,7 +14,6 @@
                 <a href="{% url 'main_app:detail_page' pk=game.id %}">
                     <button type="button" class="cover-button">Open</button>
                 </a>
-                {% csrf_token %}
                 <button type="button" class="cover-button" onclick="send_ajax_must('/add_remove_must',{{ game.id }}, true)">
                     MUST
                 </button>

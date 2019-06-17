@@ -12,6 +12,7 @@
 {% endblock %}
 
 {% block body %}
+    {% csrf_token %}
     <form class="h-100" method="get">
         <div class="h-100 row">
             <div class="col-2">
