@@ -21,6 +21,7 @@ from itechart_project import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('main_app.urls')),
+    path('api/', include('api_app.urls'))
 ]
 
 if settings.DEBUG:
