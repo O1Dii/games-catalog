@@ -5,12 +5,12 @@ services:
     env_file:
       - .env
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: ./start.sh
     volumes:
-      - .:/project/src/itechart_project
+      - .:/home/itechart_project
     ports:
       - "8000:8000"
     depends_on:
       - db
   db:
-    image: postgres
+    image: postgres:11.3
