@@ -2,15 +2,63 @@ version: '3'
 
 services:
   djangoapp:
+    image:
+      itechart_project_djangoapp:latest
     env_file:
       - .env
     build: .
-    command: ./start.sh
     volumes:
       - .:/home/itechart_project
-    ports:
-      - "8000:8000"
     depends_on:
       - db
+      - celery
+    networks:
+      - nginx_network
+      - db_network
+
+  nginx:
+    image: nginx:1.17
+    ports:
+      - 8000:80
+    volumes:
+      - ./local.conf:/home/itechart_project/local.conf
+    depends_on:
+      - djangoapp
+    networks:
+      - nginx_network
+
   db:
     image: postgres:11.3
+    networks:
+      - db_network
+
+  celery:
+    image: itechart_project_djangoapp:latest
+    command: celery -A itechart_project worker -l info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/home/itechart_project
+
+  celery-beat:
+    env_file:
+      - .env
+    image: itechart_project_djangoapp:latest
+    command: celery -A itechart_project beat -l info
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - .:/home/itechart_project
+
+  redis:
+    image: redis:5.0
+
+networks:
+  nginx_network:
+    driver: bridge
+  db_network:
+    driver: bridge

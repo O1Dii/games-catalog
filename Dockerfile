@@ -6,3 +6,5 @@ WORKDIR /home/itechart_project
 
 COPY . /home/itechart_project/
 RUN pip install -r requirements.txt
+
+CMD ["uwsgi", "--http", ":8001", "--module", "itechart_project.wsgi"]
