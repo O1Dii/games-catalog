@@ -9,19 +9,21 @@ services:
     build: .
     volumes:
       - .:/home/itechart_project
+    command: ./start.sh
     depends_on:
       - db
       - celery
     networks:
       - nginx_network
       - db_network
+      - redis_network
 
   nginx:
     image: nginx:1.17
     ports:
       - 8000:80
     volumes:
-      - ./local.conf:/home/itechart_project/local.conf
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
     depends_on:
       - djangoapp
     networks:
@@ -42,6 +44,9 @@ services:
       - db
     volumes:
       - .:/home/itechart_project
+    networks:
+      - db_network
+      - redis_network
 
   celery-beat:
     env_file:
@@ -53,12 +58,19 @@ services:
       - db
     volumes:
       - .:/home/itechart_project
+    networks:
+      - db_network
+      - redis_network
 
   redis:
     image: redis:5.0
+    networks:
+      - redis_network
 
 networks:
   nginx_network:
     driver: bridge
   db_network:
+    driver: bridge
+  redis_network:
     driver: bridge
