@@ -40,15 +40,15 @@ class IGDB:
         data = self.__api_get(f'{category}{encoded_url}')
         for i, each in enumerate(data):
             if each.get('platforms'):
-                data[i]['platforms'] = self.api_get_names('platforms', each.get('platforms')).values()
+                data[i]['platforms'] = self.api_get_names('platforms', each['platforms']).values()
             if each.get('genres'):
-                data[i]['genres'] = self.api_get_names('genres', each.get('genres')).values()
+                data[i]['genres'] = self.api_get_names('genres', each['genres']).values()
             if each.get('rating'):
-                data[i]['rating'] = round(each.get('rating') / 10, 2)
+                data[i]['rating'] = round(each['rating'] / 10, 2)
             if each.get('aggregated_rating'):
-                data[i]['aggregated_rating'] = round(each.get('aggregated_rating') / 10, 2)
+                data[i]['aggregated_rating'] = round(each['aggregated_rating'] / 10, 2)
             if each.get('screenshots'):
-                images = self.api_get_image(each.get('screenshots'), False)
+                images = self.api_get_image(each['screenshots'], False)
                 data[i]['screenshots'] = images.values()
         return data
 
@@ -58,11 +58,11 @@ class IGDB:
         data = []
         if len(id_list) > 10:
             for i in range(math.floor(len(id_list) / 10)):
-                data.extend(self.__api_get(category + ','.join(map(str, id_list[i * 10:(i + 1) * 10])) +
-                                           '?fields=name'))
-            data.extend(self.__api_get(category + ','.join(map(str,
-                                                               id_list[math.floor(len(id_list) / 10) * 10:])) +
-                                       '?fields=name'))
+                data.extend(self.__api_get(category + ','.join(map(str, id_list[i * 10:(i + 1) * 10]))
+                                           + '?fields=name'))
+            data.extend(self.__api_get(category
+                                       + ','.join(map(str, id_list[math.floor(len(id_list) / 10) * 10:]))
+                                       + '?fields=name'))
         return {each['id']: each['name'] for each in data if each.get('name')}
 
     def api_find(self, category: str, search: str) -> list:
@@ -171,12 +171,12 @@ class IGDB:
         data = []
         if len(images_id) > 10:
             for i in range(math.floor(len(images_id) / 10)):
-                data.extend(self.__api_get(query +
-                                           ','.join(map(str, images_id[i * 10:(i + 1) * 10])) +
-                                           '?fields=url'))
-            data.extend(self.__api_get(query +
-                                       ','.join(map(str, images_id[math.floor(len(images_id) / 10) * 10:])) +
-                                       '?fields=url'))
+                data.extend(self.__api_get(query
+                                           + ','.join(map(str, images_id[i * 10:(i + 1) * 10]))
+                                           + '?fields=url'))
+            data.extend(self.__api_get(query
+                                       + ','.join(map(str, images_id[math.floor(len(images_id) / 10) * 10:]))
+                                       + '?fields=url'))
         result = {}
         for each in data:
             if cover:

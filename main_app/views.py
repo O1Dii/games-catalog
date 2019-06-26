@@ -130,7 +130,7 @@ class LoginPageView(LoginView):
     template_name = 'login_register_page.html'
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data()
+        context = super().get_context_data(**kwargs)
         context['log_in'] = True
         return context
 
@@ -154,8 +154,7 @@ class MustListView(LoginRequiredMixin, ListView):
     context_object_name = 'musts'
 
     def get_queryset(self):
-        temp = Must.objects.filter(user=self.request.user)
-        return temp
+        return Must.objects.filter(user=self.request.user)
 
 
 class AddRemoveMustView(View):
@@ -163,9 +162,9 @@ class AddRemoveMustView(View):
         game_id = int(request.POST['game_id'])
         add = request.POST.get('add')
         if add:
-            must = Must.objects.get_or_create(game=Game.objects.get(id=game_id), user=request.user)
-            must[0].is_deleted = False
-            must[0].save()
+            must, _ = Must.objects.get_or_create(game=Game.objects.get(id=game_id), user=request.user)
+            must.is_deleted = False
+            must.save()
         else:
             Must.objects.get(game=Game.objects.get(id=game_id), user=request.user).delete()
         return HttpResponse('')
