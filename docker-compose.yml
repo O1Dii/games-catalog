@@ -2,11 +2,9 @@ version: '3'
 
 services:
   djangoapp:
-    image:
-      itechart_project_djangoapp:latest
     env_file:
       - .env
-    build: .
+    build: ./
     volumes:
       - .:/home/itechart_project
       - /staticfiles:/staticfiles
@@ -37,8 +35,8 @@ services:
       - db_network
 
   celery:
-    image: itechart_project_djangoapp:latest
     command: celery -A itechart_project worker -l info
+    build: ./
     env_file:
       - .env
     depends_on:
