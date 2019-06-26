@@ -137,6 +137,7 @@ class SendEmailAgain(APIView):
 
 class Logout(APIView):
     def post(self, request):
+        print(request.headers)
         if not request.user.is_anonymous:
             request.user.auth_token.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
