@@ -10,3 +10,4 @@ venv
 db.*
 .env
 celery*
+staticfiles

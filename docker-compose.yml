@@ -9,6 +9,7 @@ services:
     build: .
     volumes:
       - .:/home/itechart_project
+      - /staticfiles:/staticfiles
     command: ./start.sh
     depends_on:
       - db
@@ -24,6 +25,7 @@ services:
       - 8000:80
     volumes:
       - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - /staticfiles:/staticfiles
     depends_on:
       - djangoapp
     networks:
