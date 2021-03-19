@@ -1,4 +1,4 @@
-djangorestframework==3.9.4
+djangorestframework==3.11.2
 certifi==2019.3.9
 chardet==3.0.4
 celery==4.3.0
