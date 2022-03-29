@@ -23,7 +23,7 @@ idna==2.8
 jsonschema==2.6.0
 kombu==4.6.1
 oauthlib==3.0.1
-paramiko==2.5.0
+paramiko==2.10.1
 Pillow==6.0.0
 psycopg2==2.8.2
 pycparser==2.19
